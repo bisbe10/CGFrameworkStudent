@@ -79,6 +79,7 @@ public:
 	bool SaveTGA(const char* filename);
 
 	void DrawRect(int x, int y, int w, int h, const Color& c);
+    void DrawLineDDA(int x0, int y0, int x1, int y1, const Color& c);
 
 	// Used to easy code
 	#ifndef IGNORE_LAMBDAS
@@ -124,4 +125,6 @@ public:
 	inline void SetPixel(unsigned int x, unsigned int y, const float& v) { pixels[y * width + x] = v; }
 
 	void Resize(unsigned int width, unsigned int height);
+    
+
 };

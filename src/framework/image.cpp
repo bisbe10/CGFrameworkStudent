@@ -529,19 +529,44 @@ void Image::DrawCircle(int x, int y, int r, const Color &c, bool fill){
 
 
 
-//void Image::ScanLineDDA(int x0, int y0, int x1, int y1, std::vector<Cell>& table){}
+void Image::ScanLineDDA(int x0, int y0, int x1, int y1, std::vector<Cell>& table){
+    // Busquem les diferenciés entre les coordenades x i y dels punts inicials i finals
+    int difx =  x1-x0;
+    int dify = y1-y0;
+    // Amb std:: cridem la funció sqrt (arrel), la qual utilitzem per calcular la longitud de la línia en base a l'arrel dels quadrats de la componenet del vector entre el punt final i inicial)
+    float d = std::sqrt(std::pow(difx, 2) + std::pow(dify, 2));
+    
+    // Definim la direcció normalitzada de la línia com un vector
+    Vector2 direccio =  Vector2(difx/d, dify/d);
+    // Definim el propi vector amb coordenades inicials x0 i y0
+    Vector2 A = Vector2(x0, y0);
+
+    //iterem tantes vegades com a pixels del x0y0 a xy hi hagi
+    for (int i = 0; i < d; i++) {
+        // Check if A is within the bounds of the table
+        if (A.x >= 0 && A.x < tableWidth && A.y >= 0 && A.y < tableHeight) {
+            // Update minX and maxX values in the table
+            int tableIndex = static_cast<int>(A.y) * tableWidth + static_cast<int>(A.x);
+            table[tableIndex].minX = std::min(table[tableIndex].minX, static_cast<int>(A.x));
+            table[tableIndex].maxX = std::max(table[tableIndex].maxX, static_cast<int>(A.x));
+        }
+
+        A.operator+=(direccio);
+    }
+}
+
 
 
 
 void Image::DrawTriangle(const Vector2& p0,const Vector2& p1, const Vector2& p2, const Color& borderColor, bool isFilled, const Color& fillColor){
     
     
-    // BORDE DEL TRIANGLE
+    // BORDE DEL TRIANGLE (0,5p)
     DrawLineDDA(p0.x, p0.y, p1.x, p1.y, borderColor);
     DrawLineDDA(p1.x, p1.y, p2.x, p2.y, borderColor);
     DrawLineDDA(p2.x, p2.y, p0.x, p0.y, borderColor);
 
-    
+    // creas una taula amb un maxim de les mides de p0 p1 p2 
 }
     
     

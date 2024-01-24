@@ -45,6 +45,28 @@ public:
     Image load;
     Image eraser;
     
+    //CLASE BUTTON
+    class Button{
+    public:
+        
+        //ATRIBUTS
+        Image image;
+        int size;
+        int positionx;
+        int positiony;
+        
+        
+        //FUNCIONS
+        //CONSTRUCTOR
+        Void Button(Image im,int position){
+            image=im
+        }
+        
+        bool IsMouseInside(Vector2 mousePosition){
+            
+        }
+       
+    
 	// Constructor and main methods
 	Application(const char* caption, int width, int height);
 	~Application();

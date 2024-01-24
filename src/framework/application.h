@@ -35,7 +35,16 @@ public:
 
 	// CPU Global framebuffer
 	Image framebuffer;
-
+    Image toolbar;
+    Image line;
+    Image circle;
+    Image rectangle;
+    Image triangle;
+    Image fill;
+    Image clear;
+    Image load;
+    Image eraser;
+    
 	// Constructor and main methods
 	Application(const char* caption, int width, int height);
 	~Application();
@@ -57,4 +66,5 @@ public:
 		SDL_GetWindowSize(window,&w,&h);
 		return Vector2(float(w), float(h));
 	}
+    
 };

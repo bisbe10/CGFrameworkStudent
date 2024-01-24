@@ -322,6 +322,287 @@ void Image::DrawRect(int x, int y, int w, int h, const Color& c)
 	}
 }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+//------------------------------------PRACTICA 1:-------------------------------------------\\
+
+
+
+
+
+
+
+
+                    // EXERCICI 1: IMPLEMENT NOSTRE (DRAWLINEDDA 1p) \\
+
+
+void Image::DrawLineDDA(int x0, int y0, int x1, int y1, const Color &c){
+    
+    // Busquem les diferenciés entre les coordenades x i y dels punts inicials i finals
+    int difx =  x1-x0;
+    int dify = y1-y0;
+    // Amb std:: cridem la funció sqrt (arrel), la qual utilitzem per calcular la longitud de la línia en base a l'arrel dels quadrats de la componenet del vector entre el punt final i inicial)
+    float d = std::sqrt(std::pow(difx, 2) + std::pow(dify, 2));
+    
+    // Definim la direcció normalitzada de la línia com un vector
+    Vector2 direccio =  Vector2(difx/d, dify/d);
+    // Definim el propi vector amb coordenades inicials x0 i y0
+    Vector2 A = Vector2(x0, y0);
+
+    //iterem tantes vegades com a pixels del x0y0 a xy hi hagi
+    for(int i = 0; i < d; i++){
+        
+        SetPixel(floor(A.x), floor(A.y), c);
+        
+        //operator:funció de A que defineix el tipus de clase de "+=" [ aquesta linia suma la direcció i la distancia 1 al nostre vector normalitzat A] així doncs a va guanyant distancia del punt x0 y0 a x y
+        A.operator+=(direccio);
+    }
+}
+
+
+
+
+
+
+
+
+            // EXERCICI 2: IMPLEMENTACIÓ NOSTRE (Drawing Rectangles (1 point)) \\
+
+
+void Image::DrawRect(int x, int y, int w, int h, const Color& borderColor, int borderWidth, bool isFilled, const Color& fillColor){
+   
+    // Determinem quantes vegades hem de fer rectangles depenent del width.
+    for(int b=0; b<(borderWidth); b++){
+        //agafem de referencia l'eix de les x
+        for(int i = x; i < (x+w); i++){
+            
+        // Extrems del rectangle han de juntar les dues linies horitzontals (w) amb una distancia (h)
+        
+        //Extrem inicial
+           if (i==x){
+
+                    for (int j=y; j<(h+y); j++){
+                        // desde la posició x(=i) pinta pixels en direcció amunt h vegades, fins a (h+y).
+                         SetPixel(i, j, borderColor);
+                    }
+
+        //Extrem final
+        } else if( i==((x+w)-1)){
+                    for (int j=y; j<(h+y); j++){
+                        // desde la posició x+w(=i+w) pinta pixels en direcció amunt h vegades, fins a (h+y).
+                          SetPixel(x+w, j, borderColor);
+                    }
+                }
+        // formem les dues linies horitzontals
+            SetPixel(i, y, borderColor); // desde l'altura y (pixel x,y pixel x+1,y .... pixel x+w, y)
+            SetPixel(i, y+h, borderColor);// desde l'altura y+h (pixel x,y+h pixel x+1,y+h .... pixel x+w, y+h)
+        
+        }
+        // depenent del borde que necessitem col·loquem el nostre punt de referncia més endins i dalt i restel la altura i amplada necessaries al realitzr aquest canvi
+        x+=1;
+        y+=1;
+        w-=2;
+        h-=2;
+    }
+    // Si filled==true formem un rectangle omplert dins del borde format. agafant de referencia la x i y resultants de les orperacions per engruixir el borde.
+    if (isFilled==true){
+        for(int wf=0; wf<w+1; ++wf){
+            for(int hf=0; hf<h+1;++hf){
+                SetPixel((x+wf),(y+hf),fillColor);
+            }
+        }
+    }
+
+}
+    
+
+
+
+
+
+
+
+  
+        // EXERCICI 3: IMPLEMENTACIÓ NOSTRE DE (3.3 Rasterizing Circles (2 points) \\
+
+
+
+
+void Image::DrawCircle(int x, int y, int r, const Color &c, bool fill){
+    
+    // Definim el centre del cercle CentreX=X CentreY=Y centre=(x,y) .
+    int centreX;
+    int centreY;
+    //CentreX=X incial CentreY=Y incial -> centre=(x,y)
+    centreX = x;
+    centreY = y;
+    int v;
+    x = 0;
+    y = r;
+    v = 1-r;
+    
+    // Dibuixem els quatre punts inicials (superior, inferior, dret i esquerre) utilitzant la funció SetPixelSafe per assegurar-se que no es superi la mida de la imatge.
+    SetPixelSafe(centreX, centreY+y, c); //Superior
+    SetPixelSafe(centreX, centreY-y, c);//Inferior
+    SetPixelSafe(centreX + y, centreY, c);//Dret
+    SetPixelSafe(centreX-y, centreY, c);//Esquerra
+
+    // (algorisme de Bresenham) !!comprobar
+    
+    while( y > x){
+        // condició que determina el numero de particions que trobem en un quart de cercle(=numero d'iteracions del while)
+        if( v < 0){
+            // la v, quan el radi és més gran a 1, defineix les particions de pixels que tenim en un quart de cercle ( donant una iteració més a la y).
+            v = v+2*x+3;
+            x++;
+        }else{
+            // la v, quan el radi és més petit a 1, defineix les particions de pixels que tenim en un quart de cercle.
+            v = v+2*(x-y)+5;
+            x++;
+            y--;
+        }
+        // linies de codi que dibueixen els pixels simetrics al primer quart.
+        SetPixelSafe(centreX + x, centreY + y, c); // (x,y)
+        SetPixelSafe(centreX - x, centreY + y, c); // (-x, y)
+        SetPixelSafe(centreX + x, centreY - y, c); // (x, -y)
+        SetPixelSafe(centreX - x, centreY - y, c); // (-x, -y)
+        SetPixelSafe(centreX + y, centreY + x, c); // (y, x)
+        SetPixelSafe(centreX - y, centreY + x, c); // (-y, x)
+        SetPixelSafe(centreX + y, centreY - x, c);// (y, -x)
+        SetPixelSafe(centreX - y, centreY - x, c); // (-y, -x)
+    
+        
+        
+        // CODI PER EMPLENAR EL CERCLE
+        if(fill == true){
+            // emplenarem el cercle formant linies entre els diferents punts que anem creant en el perimetre de la rodona.
+            
+            for(int j = centreX - y ; j < centreX + y; j++){
+                SetPixelSafe(j, centreY, c);
+            }
+            
+            for(int j = centreX - x; j< centreX + x; j++ ){ // (-x,y) a (x,y)
+                SetPixelSafe(j, centreY + y, c);
+                
+            }
+
+            for(int j = centreX - y; j < centreX + y; j++){ // (-y,x) a (y,x)
+                SetPixelSafe(j, centreY + x, c);
+
+            }
+
+            for(int j = centreX - x; j < centreX + x; j++){ // (-x,-y) a (x,-y)
+                SetPixelSafe(j, centreY - y, c);
+            }
+
+            for(int j =centreX - y; j < centreX + y; j++ ){ // (-y,-x) a (y,-x)
+                SetPixelSafe(j, centreY - x, c);
+            }
+        
+        
+        }
+    }
+}
+        
+   
+
+
+
+
+
+
+
+
+                // EXERCICI 4 IMPLEMENT NOSTRE DE (DRAWTRIANGLE 2P)\\
+
+
+
+//void Image::ScanLineDDA(int x0, int y0, int x1, int y1, std::vector<Cell>& table){}
+
+
+
+void Image::DrawTriangle(const Vector2& p0,const Vector2& p1, const Vector2& p2, const Color& borderColor, bool isFilled, const Color& fillColor){
+    
+    
+    // BORDE DEL TRIANGLE
+    DrawLineDDA(p0.x, p0.y, p1.x, p1.y, borderColor);
+    DrawLineDDA(p1.x, p1.y, p2.x, p2.y, borderColor);
+    DrawLineDDA(p2.x, p2.y, p0.x, p0.y, borderColor);
+
+    
+}
+    
+    
+ 
+
+
+
+
+
+
+
+
+
+
+                        //EXERCICI 5 IMPLEMENT NOSTRE DE (DRAWIMAGE 0.5p)\\
+
+
+    void Image::DrawImage(const Image& image, int x, int y, bool top){
+        
+        //Definim l'alçada en la que dibuixarem la imatge restant l'alçada de l'imatge a la del framebuffer.
+        int alçada = this->height - image.height;
+        
+        for(int i = 0; i < image.width ; i++){
+            for(int j = 0 ; j <  image.height; j++){
+                Color color = image.GetPixelSafe(i,j);
+                
+                if(top){
+                    //this->top = true;
+                    SetPixelSafe(i+x, j+alçada , color);
+                    
+                }else{
+                    //this->top = false;
+                    SetPixelSafe(i+x, j , color);
+                }
+                
+            }
+        }
+    }
+    
+    
+    
+    
+    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 #ifndef IGNORE_LAMBDAS
 
 // You can apply and algorithm for two images and store the result in the first one

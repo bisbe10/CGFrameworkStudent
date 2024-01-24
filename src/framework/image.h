@@ -79,8 +79,53 @@ public:
 	bool SaveTGA(const char* filename);
 
 	void DrawRect(int x, int y, int w, int h, const Color& c);
-    void DrawLineDDA(int x0, int y0, int x1, int y1, const Color& c);
+    
+    
+    
+    
+    
+    
+    
+    
+    
+                                // CODI NOSTRE PRACTICA 1 \\
 
+    // EXERCICI 1 IMPLEMENT NOSTRE  DE (DRAWLINEDDA 1p)
+    void DrawLineDDA(int x0, int y0, int x1, int y1, const Color& c);
+    
+    // EXERCICI 2 IMPLEMENT NOSTRE DE ( DRAWRECT 1P)
+    void DrawRect(int x, int y, int w, int h, const Color& borderColor, int borderWidth, bool isFilled, const Color& fillColor);
+    
+    // EXERCICI 3 IMPLEMENT NOSTRE DE (DRAWCIRCLE 2p)
+    void DrawCircle(int x, int y, int r, const Color &c, bool fill);
+    
+    // EXERCICI 4 IMPLEMENT NOSTRE DE (DRAWTRIANGLE 2P)
+    //void Image::ScanLineDDA(int x0, int y0, int x1, int y1, std::vector<Cell>& table);
+    
+    void DrawTriangle(const Vector2& p0, const Vector2& p1, const Vector2& p2, const Color& borderColor, bool isFilled, const Color& fillColor);
+    
+    //EXERCICI 5 IMPLEMENT NOSTRE DE (DRAWIMAGE 0.5p)
+    void DrawImage(const Image& image, int x, int y, bool top);
+    
+    //CLASE BUTTON????
+    class Button{
+    public:
+        int x_position;
+        int y_position;
+        bool clicked;
+        
+        
+    };
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
 	// Used to easy code
 	#ifndef IGNORE_LAMBDAS
 

@@ -132,6 +132,8 @@ void Application::Render(void)
     
     //EXERCICI 5 IMPLEMENT NOSTRE DE (DRAWIMAGE 0.5p)\\
     //definim  una linia de codi per entrar la toolbar en el nostre framebuffer (ha d'estar al (0,0)).
+    
+    
     framebuffer.DrawImage(toolbar, 0, 0, false);
     //Entrem les imatges al buffer.
     framebuffer.DrawImage(line, 0, 0, true);
@@ -158,6 +160,8 @@ void Application::Update(float seconds_elapsed)
 
 }
 
+
+
 //keyboard press event 
 void Application::OnKeyPressed( SDL_KeyboardEvent event )
 {
@@ -174,18 +178,24 @@ void Application::OnMouseButtonDown( SDL_MouseButtonEvent event )
 	}
 }
 
+
+
+
 void Application::OnMouseButtonUp( SDL_MouseButtonEvent event )
 {
 	if (event.button == SDL_BUTTON_LEFT) {
         std::cout << "PITJAT" << std::endl;
-        //
-                //if (array[i].IsMouseInside(mousePosition)==TRUE){}
-                    // fes allo que digui el boto
-        // si dins es true el mouse inside vol dri que s'ha fet click
-        // comprovar tots els botons
+        if (toolbar_b->IsMouseInside(mouse_position)==true){
+            std::cout << "PITJAT TOOLBAR" << std::endl;
+        }
 
 	}
 }
+
+
+
+
+
 
 void Application::OnMouseMove(SDL_MouseButtonEvent event)
 {

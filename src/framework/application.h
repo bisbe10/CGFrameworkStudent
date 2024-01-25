@@ -45,6 +45,7 @@ public:
     Image clear;
     Image load;
     Image eraser;
+    Button* toolbar_b = new Button( toolbar, 0,0,1280,60,false);
     
     
 	// Constructor and main methods
@@ -71,60 +72,3 @@ public:
     
 };
 
-//CLASE BUTTON
-class Button{
-private:
-
-    //ATRIBUTS
-    Image image;
-    int size;
-    bool top;
-    float positionx0;
-    float positionx;
-    float positiony0;
-    float positiony;
-
-public:
-    //FUNCIONS
-    //CONSTRUCTOR
-    Button(Image im,int px0, int py0, int px, int py){
-        image=im;
-        positionx=px;
-        positiony=py;
-        positionx0=px0;
-        positiony0=py0;
-    }
-    //geters
-    float getPostitionx0 ( ){
-        return positionx0;
-    }
-    float getPostitiony0 ( ){
-        return positiony0;
-    }
-    float getPostitionx ( ){
-        return positionx;
-    }
-    float getPostitiony ( ){
-        return positiony;
-    }
-    bool getTop ( ){
-        return top;
-        
-    }
-    bool IsMouseInside(Vector2 mousePosition){
-        if (positionx0 <= mousePosition.x & mousePosition.x <= positionx){
-            // la y0 es el max si el botton es top = true
-            if (top==true) {
-                if  (postiony0>= mousePosition.y & mousePosition.y >= positiony){
-                    return true; // maus entre y< maus.y <y0
-                }
-            }else{
-                // la y0 es 0 si el botton es top = false
-                if (positiony0 <= mousePosition.y & mousePosition.y <= positiony){
-                    return true; // maus entre y0< maus.y <y
-                }
-            }
-            return false;
-        }
-    }
-};

@@ -440,7 +440,7 @@ void Image::DrawRect(int x, int y, int w, int h, const Color& borderColor, int b
 
 
 
-void Image::DrawCircle(int x, int y, int r, const Color &c, bool fill){
+void Image::DrawCircle(int x, int y, int r, const Color & borderColor,int borderWidth, bool fill, const Color& fillColor){
     
     // Definim el centre del cercle CentreX=X CentreY=Y centre=(x,y) .
     int centreX;
@@ -454,10 +454,10 @@ void Image::DrawCircle(int x, int y, int r, const Color &c, bool fill){
     v = 1-r;
     
     // Dibuixem els quatre punts inicials (superior, inferior, dret i esquerre) utilitzant la funció SetPixelSafe per assegurar-se que no es superi la mida de la imatge.
-    SetPixelSafe(centreX, centreY+y, c); //Superior
-    SetPixelSafe(centreX, centreY-y, c);//Inferior
-    SetPixelSafe(centreX + y, centreY, c);//Dret
-    SetPixelSafe(centreX-y, centreY, c);//Esquerra
+    SetPixelSafe(centreX, centreY+y, borderColor); //Superior
+    SetPixelSafe(centreX, centreY-y, borderColor);//Inferior
+    SetPixelSafe(centreX + y, centreY, borderColor);//Dret
+    SetPixelSafe(centreX-y, centreY, borderColor);//Esquerra
 
     // (algorisme de Bresenham) !!comprobar
     
@@ -474,14 +474,14 @@ void Image::DrawCircle(int x, int y, int r, const Color &c, bool fill){
             y--;
         }
         // linies de codi que dibueixen els pixels simetrics al primer quart.
-        SetPixelSafe(centreX + x, centreY + y, c); // (x,y)
-        SetPixelSafe(centreX - x, centreY + y, c); // (-x, y)
-        SetPixelSafe(centreX + x, centreY - y, c); // (x, -y)
-        SetPixelSafe(centreX - x, centreY - y, c); // (-x, -y)
-        SetPixelSafe(centreX + y, centreY + x, c); // (y, x)
-        SetPixelSafe(centreX - y, centreY + x, c); // (-y, x)
-        SetPixelSafe(centreX + y, centreY - x, c);// (y, -x)
-        SetPixelSafe(centreX - y, centreY - x, c); // (-y, -x)
+        SetPixelSafe(centreX + x, centreY + y, borderColor); // (x,y)
+        SetPixelSafe(centreX - x, centreY + y,borderColor); // (-x, y)
+        SetPixelSafe(centreX + x, centreY - y, borderColor); // (x, -y)
+        SetPixelSafe(centreX - x, centreY - y, borderColor); // (-x, -y)
+        SetPixelSafe(centreX + y, centreY + x, borderColor); // (y, x)
+        SetPixelSafe(centreX - y, centreY + x, borderColor); // (-y, x)
+        SetPixelSafe(centreX + y, centreY - x, borderColor);// (y, -x)
+        SetPixelSafe(centreX - y, centreY - x, borderColor); // (-y, -x)
     
         
         
@@ -489,28 +489,24 @@ void Image::DrawCircle(int x, int y, int r, const Color &c, bool fill){
         if(fill == true){
             // emplenarem el cercle formant linies entre els diferents punts que anem creant en el perimetre de la rodona.
             
-            for(int j = centreX - y ; j < centreX + y; j++){
-                SetPixelSafe(j, centreY, c);
-            }
-            
-            for(int j = centreX - x; j< centreX + x; j++ ){ // (-x,y) a (x,y)
-                SetPixelSafe(j, centreY + y, c);
-                
-            }
-
-            for(int j = centreX - y; j < centreX + y; j++){ // (-y,x) a (y,x)
-                SetPixelSafe(j, centreY + x, c);
+            for(int j = centreX - x; j< centreX + x-2; j++ ){ // primera porció del cercle
+                SetPixelSafe(j+1, centreY + y-1, fillColor);
 
             }
 
-            for(int j = centreX - x; j < centreX + x; j++){ // (-x,-y) a (x,-y)
-                SetPixelSafe(j, centreY - y, c);
+            for(int j = centreX - y; j < centreX + y-2; j++){ //  segona porició del cercle
+                SetPixelSafe(j+1, centreY + x+1, fillColor);
+
             }
 
-            for(int j =centreX - y; j < centreX + y; j++ ){ // (-y,-x) a (y,-x)
-                SetPixelSafe(j, centreY - x, c);
+            for(int j = centreX - x; j < centreX + x-2; j++){ // última porció del cercle
+                SetPixelSafe(j+2, centreY - y+1, fillColor);
             }
-        
+
+            for(int j =centreX - y; j < centreX + y-2; j++ ){ // penùltima porció del cercle
+                SetPixelSafe(j+1, centreY - x+2, fillColor);
+            }
+
         
         }
     }
@@ -543,14 +539,20 @@ void Image::ScanLineDDA(int x0, int y0, int x1, int y1, std::vector<Cell>& table
 
     //iterem tantes vegades com a pixels del x0y0 a xy hi hagi
     for (int i = 0; i < d; i++) {
+        
+        
+        
+        
         // Check if A is within the bounds of the table
-        if (A.x >= 0 && A.x < tableWidth && A.y >= 0 && A.y < tableHeight) {
-            // Update minX and maxX values in the table
-            int tableIndex = static_cast<int>(A.y) * tableWidth + static_cast<int>(A.x);
-            table[tableIndex].minX = std::min(table[tableIndex].minX, static_cast<int>(A.x));
-            table[tableIndex].maxX = std::max(table[tableIndex].maxX, static_cast<int>(A.x));
-        }
+//        if (A.x >= 0 && A.x < tableWidth && A.y >= 0 && A.y < tableHeight) {
+//            // Update minX and maxX values in the table
+//            int tableIndex = static_cast<int>(A.y) * tableWidth + static_cast<int>(A.x);
+//            table[tableIndex].minX = std::min(table[tableIndex].minX, static_cast<int>(A.x));
+//            table[tableIndex].maxX = std::max(table[tableIndex].maxX, static_cast<int>(A.x));
+//        }
 
+        
+        
         A.operator+=(direccio);
     }
 }
@@ -581,7 +583,7 @@ void Image::DrawTriangle(const Vector2& p0,const Vector2& p1, const Vector2& p2,
 
 
 
-                        //EXERCICI 5 IMPLEMENT NOSTRE DE (DRAWIMAGE 0.5p)\\
+                        //EXERCICI 5 IMPLEMENT ALBA (DRAWIMAGE 0.5p)\\
 
 
     void Image::DrawImage(const Image& image, int x, int y, bool top){

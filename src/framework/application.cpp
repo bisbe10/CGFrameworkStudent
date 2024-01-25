@@ -59,6 +59,17 @@ void Application::Init(void)
         std::cout << "Image not found!" << std::endl;
         
     }
+    // MOSTREM LES IMATGES DELS BOTONS DEMANATS PER PANTALLA
+    
+    // Guardem les imatges dins de les variabwles
+    line.LoadPNG("images/line.png", false);
+    circle.LoadPNG("images/circle.png", false);
+    rectangle.LoadPNG("images/rectangle.png", false);
+    fill.LoadPNG("images/fill.png", false);
+    clear.LoadPNG("images/clear.png", false);
+    load.LoadPNG("images/load.png", false);
+    eraser.LoadPNG("images/eraser.png", false);
+    
     
 //    for(int i = 0; i < 100; i++){
 //            state[i].pos_x = rand()%framebuffer.width+1;
@@ -99,7 +110,7 @@ void Application::Render(void)
     
 //      EXERCICI 2: IMPLEMENTACIÓ NOSTRE (Drawing Rectangles (1 point)) \\
     
-//      framebuffer.DrawRect(300, 200, 500, 200, Color::RED, 8, true, Color::BLUE);
+//     framebuffer.DrawRect(300, 200, 500, 200, Color::RED, 8, true, Color::BLUE);
     
     
     
@@ -107,9 +118,9 @@ void Application::Render(void)
     
 //      EXERCICI 3: IMPLEMENTACIÓ NOSTRE DE (3.3 Rasterizing Circles (2 points) \\
     
-//      framebuffer.DrawCircle(800, 300, 2, Color::RED, false);
+    framebuffer.DrawCircle(800, 300, 100, Color::RED,4, true,Color::BLUE);
     
-//      framebuffer.DrawCircle(this->window_width / 2, this->window_height / 2, 100, Color::RED, true);
+//    framebuffer.DrawCircle(this->window_width / 2, this->window_height / 2, 100, Color::RED,4, true,Color::BLUE);
     
     
     
@@ -122,27 +133,6 @@ void Application::Render(void)
     //EXERCICI 5 IMPLEMENT NOSTRE DE (DRAWIMAGE 0.5p)\\
     //definim  una linia de codi per entrar la toolbar en el nostre framebuffer (ha d'estar al (0,0)).
     framebuffer.DrawImage(toolbar, 0, 0, false);
-    
-    // MOSTREM LES IMATGES DELS BOTONS DEMANATS PER PANTALLA
-    // Def les variables on guardarem les imatges
-    Image line;
-    Image circle;
-    Image rectangle;
-    Image triangle;
-    Image fill;
-    Image clear;
-    Image load;
-    Image eraser;
-    
-    // Guardem les imatges dins de les variables
-    line.LoadPNG("images/line.png", false);
-    circle.LoadPNG("images/circle.png", false);
-    rectangle.LoadPNG("images/rectangle.png", false);
-    fill.LoadPNG("images/fill.png", false);
-    clear.LoadPNG("images/clear.png", false);
-    load.LoadPNG("images/load.png", false);
-    eraser.LoadPNG("images/eraser.png", false);
-    
     //Entrem les imatges al buffer.
     framebuffer.DrawImage(line, 0, 0, true);
     framebuffer.DrawImage(circle, 35, 0, true);
@@ -151,6 +141,7 @@ void Application::Render(void)
     framebuffer.DrawImage(load, 140, 0, true);
     framebuffer.DrawImage(eraser, 175, 0, true);
     framebuffer.DrawImage(fill, 205, 0, true);
+  
     framebuffer.Render();
 }
 
@@ -186,7 +177,10 @@ void Application::OnMouseButtonDown( SDL_MouseButtonEvent event )
 void Application::OnMouseButtonUp( SDL_MouseButtonEvent event )
 {
 	if (event.button == SDL_BUTTON_LEFT) {
-        
+        std::cout << "PITJAT" << std::endl;
+        //
+                //if (array[i].IsMouseInside(mousePosition)==TRUE){}
+                    // fes allo que digui el boto
         // si dins es true el mouse inside vol dri que s'ha fet click
         // comprovar tots els botons
 

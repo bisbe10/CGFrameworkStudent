@@ -97,7 +97,7 @@ public:
     void DrawRect(int x, int y, int w, int h, const Color& borderColor, int borderWidth, bool isFilled, const Color& fillColor);
     
     // EXERCICI 3 IMPLEMENT NOSTRE DE (DRAWCIRCLE 2p)
-    void DrawCircle(int x, int y, int r, const Color &c, bool fill);
+    void DrawCircle(int x, int y, int r, const Color & borderColor,int borderWidth, bool fill, const Color& fillColor);
     
     // EXERCICI 4 IMPLEMENT NOSTRE DE (DRAWTRIANGLE 2P)
     
@@ -105,9 +105,9 @@ public:
     struct Cell{
         int min_x=INT_MIN;
         int max_x=INT_MAX;
-    }
+    };
         //funció ScanLineDDA
-    void Image::ScanLineDDA(int x0, int y0, int x1, int y1, std::vector<Cell>& table);
+    void ScanLineDDA(int x0, int y0, int x1, int y1, std::vector<Cell>& table);
     
         //funció DrawTriangle
     void DrawTriangle(const Vector2& p0, const Vector2& p1, const Vector2& p2, const Color& borderColor, bool isFilled, const Color& fillColor);
@@ -117,7 +117,7 @@ public:
     void DrawImage(const Image& image, int x, int y, bool top);
     
         
-    };
+  
     
     
     

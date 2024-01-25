@@ -70,6 +70,15 @@ void Application::Init(void)
     load.LoadPNG("images/load.png", false);
     eraser.LoadPNG("images/eraser.png", false);
     
+    //Guardem les imatges dels colors dins de les variables
+    red.LoadPNG("images/red.png", false);
+    black.LoadPNG("images/black.png", false);
+    cyan.LoadPNG("images/cyan.png", false);
+    blue.LoadPNG("images/blue.png", false);
+    pink.LoadPNG("images/pink.png", false);
+    green.LoadPNG("images/green.png", false);
+    
+    
     
 //    for(int i = 0; i < 100; i++){
 //            state[i].pos_x = rand()%framebuffer.width+1;
@@ -118,7 +127,7 @@ void Application::Render(void)
     
 //      EXERCICI 3: IMPLEMENTACIÓ NOSTRE DE (3.3 Rasterizing Circles (2 points) \\
     
-    framebuffer.DrawCircle(800, 300, 100, Color::RED,4, true,Color::BLUE);
+    //framebuffer.DrawCircle(800, 300, 100, Color::RED,4, true,Color::BLUE);
     
 //    framebuffer.DrawCircle(this->window_width / 2, this->window_height / 2, 100, Color::RED,4, true,Color::BLUE);
     
@@ -143,6 +152,12 @@ void Application::Render(void)
     framebuffer.DrawImage(load, 140, 0, true);
     framebuffer.DrawImage(eraser, 175, 0, true);
     framebuffer.DrawImage(fill, 205, 0, true);
+    
+    //Entrem les imatges dels colors al buffer.
+    framebuffer.DrawImage(red, 165, 16, false);
+    framebuffer.DrawImage(black, 115, 16, false);
+    framebuffer.DrawImage(green, 215, 16, false);
+    framebuffer.DrawImage(cyan, 420, 16, false);
   
     framebuffer.Render();
 }
@@ -185,11 +200,37 @@ void Application::OnMouseButtonUp( SDL_MouseButtonEvent event )
 {
 	if (event.button == SDL_BUTTON_LEFT) {
         std::cout << "PITJAT" << std::endl;
-        if (toolbar_b->IsMouseInside(mouse_position)==true){
-            std::cout << "PITJAT TOOLBAR" << std::endl;
+        if (line_b->IsMouseInside(mouse_position)==true){
+            std::cout << "PITJAT line" << std::endl;
+            opcio=1;
+        } else if (circle_b->IsMouseInside(mouse_position)==true){
+            std::cout << "PITJAT circle" << std::endl;
+            opcio=2;
+        } else if (rectangle_b->IsMouseInside(mouse_position)==true){
+            std::cout << "PITJAT rectangle" << std::endl;
+            opcio=3;
+        }else if (clear_b->IsMouseInside(mouse_position)==true){
+            std::cout << "PITJAT clear" << std::endl;
+            framebuffer.Fill(Color::BLACK);
+            opcio=0;
+        }else if (red_b->IsMouseInside(mouse_position)==true){
+            std::cout << "PITJAT clear" << std::endl;
+            framebuffer.Fill(Color::BLACK);
+            opcio=0;
         }
-
-	}
+        else{
+            
+            if(opcio==0){
+                
+            }else if (opcio==2){
+                framebuffer.DrawCircle(mouse_position.x, mouse_position.y, 100, Color::RED,4, fill_cnt,Color::BLUE);
+            }else if (opcio==3){
+                framebuffer.DrawRect(mouse_position.x, mouse_position.y, 100, 200, Color::RED, 8, fill_cnt, Color::BLUE);
+            }else if (opcio==4){
+                framebuffer.Fill(Color::BLACK);
+            }
+        }
+    }
 }
 
 

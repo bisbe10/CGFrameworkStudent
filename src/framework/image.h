@@ -185,7 +185,6 @@ private:
 
     //ATRIBUTS
     Image image;
-    int size;
     bool top;
     float positionx0;
     float positionx;

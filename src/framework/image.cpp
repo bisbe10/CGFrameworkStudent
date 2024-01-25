@@ -597,11 +597,11 @@ void Image::DrawTriangle(const Vector2& p0,const Vector2& p1, const Vector2& p2,
                 
                 if(top){
                     //this->top = true;
-                    SetPixelSafe(i+x, j+alçada , color);
+                    SetPixelSafe(i+x, j+alçada, color);
                     
                 }else{
                     //this->top = false;
-                    SetPixelSafe(i+x, j , color);
+                    SetPixelSafe(i+x, j+y , color);
                 }
                 
             }

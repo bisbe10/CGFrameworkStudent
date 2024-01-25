@@ -34,7 +34,13 @@ public:
 	void OnFileChanged(const char* filename);
 
 	// CPU Global framebuffer
-    int nimatges=9;
+    
+    // Variables predeterminades per passar els botons per pantalla
+    int opcio=0;
+    Color color_b= Color::RED;
+    bool fill_cnt=false; 
+    
+    // Definicions de les imatges dels botons
 	Image framebuffer;
     Image toolbar;
     Image line;
@@ -45,7 +51,26 @@ public:
     Image clear;
     Image load;
     Image eraser;
+    
+    //colors
+    Image red;
+    Image blue;
+    Image pink;
+    Image green;
+    Image black;
+    Image cyan;
+
+    
+    // Definicions dels botons
     Button* toolbar_b = new Button( toolbar, 0,0,1280,60,false);
+    Button* line_b = new Button( line, 0,this->window_height,32,32,true);
+    Button* circle_b = new Button( circle, 35,this->window_height ,67,32,true);
+    Button* rectangle_b = new Button( rectangle, 70,this->window_height ,102,32,true);
+    Button* clear_b = new Button( clear, 105,this->window_height ,137,32,true);
+    
+    
+    // Definicions dels botons de colors
+    Button* red_b = new Button( clear, 105,this->window_height ,137,32,true);
     
     
 	// Constructor and main methods

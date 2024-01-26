@@ -440,7 +440,7 @@ void Image::DrawRect(int x, int y, int w, int h, const Color& borderColor, int b
 
 
 
-
+//hemos investigado sobre algoritmos que generaban el circulo de forma de manera eficiente. Nos hemos decantado por intentar el algoritmo de Bresenham, el cual va generando el círculo por octavos.
 void Image::DrawCircle(int x, int y, int r, const Color & borderColor,int borderWidth, bool fill, const Color& fillColor){
     
     // Definim el centre del cercle CentreX=X CentreY=Y centre=(x,y) .
@@ -460,7 +460,7 @@ void Image::DrawCircle(int x, int y, int r, const Color & borderColor,int border
     SetPixelSafe(centreX + y, centreY, borderColor);//Dret
     SetPixelSafe(centreX-y, centreY, borderColor);//Esquerra
 
-    // (algorisme de Bresenham) !!comprobar
+    
     
     while( y > x){
         // condició que determina el numero de particions que trobem en un quart de cercle(=numero d'iteracions del while)
@@ -635,7 +635,7 @@ void ParticleSystem::Init(){
         particles[i].color.Random();
         particles[i].velocity.Random(200);
         particles[i].acceleration=80;
-        particles[i].ttl=15;
+        particles[i].ttl=45;
                     
     }
     
@@ -659,26 +659,25 @@ void ParticleSystem::Render(Image* framebuffer){
 void ParticleSystem::Update(float dt) {
     for (int i = 0; i < MAX_PARTICLES; i++) {
         if (!particles[i].inactive) {
-            // Obtén el vector de velocidad actual
-            Vector2 currentVelocity = particles[i].velocity;
+            //ens guardem la velocitat actual
+            Vector2 vel_actual = particles[i].velocity;
+            
+            //calculem la velocitat angular i la rotació per poder calcular el mcu
+            
+            float vel_ang = 2.0 * M_PI;
+            float rotacion = vel_ang * dt;
 
-            // Calcula la rotación del vector de velocidad para un movimiento circular uniforme
-            float angularSpeed = 2.0 * M_PI;  // Velocidad angular para un MCU (en radianes por segundo)
-            float rotation = angularSpeed * dt;
+            // actualitzem velocitat, posició i acceleració
+            particles[i].velocity.x = vel_actual.x * cos(rotacion) - vel_actual.y * sin(rotacion);
+            particles[i].velocity.y = vel_actual.x * sin(rotacion) + vel_actual.y * cos(rotacion);
 
-            // Rota el vector de velocidad
-            particles[i].velocity.x = currentVelocity.x * cos(rotation) - currentVelocity.y * sin(rotation);
-            particles[i].velocity.y = currentVelocity.x * sin(rotation) + currentVelocity.y * cos(rotation);
-
-            // Actualiza la posición de la partícula utilizando el nuevo vector de velocidad
             particles[i].position.x += particles[i].velocity.x * dt;
             particles[i].position.y += particles[i].velocity.y * dt;
-
-            // Modifica la aceleración y el tiempo de vida (ttl) según sea necesario
+            
             particles[i].acceleration += 80.0 * dt;
             particles[i].ttl -= dt;
 
-            // Verifica si la partícula ha alcanzado el final de su vida útil
+            // mirem si la particula ha finalitzat la seva vida útil
             if (particles[i].ttl <= 0.0) {
                 particles[i].inactive = true;
             }

@@ -131,7 +131,7 @@ void Application::Render(void)
 
 
     }else if(ANIMATION){
-        ps.Init();
+      //si no has vist l'animació es pq comença tant bon punt comença quan s'obre la pantalla del framebuffer
         ps.Render(&framebuffer);
 
 

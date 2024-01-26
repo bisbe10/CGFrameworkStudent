@@ -336,7 +336,7 @@ void Image::DrawRect(int x, int y, int w, int h, const Color& c)
 
 
 
-//------------------------------------PRACTICA 1:-------------------------------------------\\
+//------------------------------------PRACTICA 1:-----------------------------------------------------------\\
 
 
 
@@ -578,12 +578,7 @@ void Image::DrawTriangle(const Vector2& p0,const Vector2& p1, const Vector2& p2,
 
 
 
-
-
-
-
-
-                        //EXERCICI 5 IMPLEMENT ALBA (DRAWIMAGE 0.5p)\\
+                        //EXERCICI 5 IMPLEMENTACIÓ NOSTRE DE (DRAWIMAGE 0.5p)\\
 
 
     void Image::DrawImage(const Image& image, int x, int y, bool top){
@@ -610,22 +605,6 @@ void Image::DrawTriangle(const Vector2& p0,const Vector2& p1, const Vector2& p2,
     
     
     
-    
-    
-
-
-
-
-
-
-
-
-
-
-
-
-
-
 
 
 

@@ -103,8 +103,8 @@ public:
     
         //estructura Cell
     struct Cell{
-        int min_x=INT_MIN;
-        int max_x=INT_MAX;
+        int min_x=INT_MAX;
+        int max_x=INT_MIN;
     };
         //funció ScanLineDDA
     void ScanLineDDA(int x0, int y0, int x1, int y1, std::vector<Cell>& table);
@@ -145,6 +145,28 @@ public:
 };
 
 // Image storing one float per pixel instead of a 3 or 4 component Color
+//PARTICULES:
+
+class ParticleSystem {
+
+        static const int MAX_PARTICLES = 970;
+
+        struct Particle {
+                Vector2 position;
+                Vector2 velocity; // Normalized speed and direction of the particle
+                Color color;
+                float acceleration;
+                float ttl; // Time left until the particle expires
+                bool inactive; // Particle is not used/expired, so it can be recreated
+        };
+
+        Particle particles[MAX_PARTICLES];
+
+public:
+        void Init();//inicialitza
+        void Render(Image* framebuffer);//imprimeix per pantalla
+        void Update(float dt);//actualitza
+};
 
 class FloatImage
 {

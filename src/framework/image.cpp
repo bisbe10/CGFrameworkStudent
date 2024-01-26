@@ -8,6 +8,7 @@
 #include "utils.h"
 #include "camera.h"
 #include "mesh.h"
+#include "cmath"
 
 Image::Image() {
 	width = 0; height = 0;
@@ -524,51 +525,68 @@ void Image::DrawCircle(int x, int y, int r, const Color & borderColor,int border
                 // EXERCICI 4 IMPLEMENT NOSTRE DE (DRAWTRIANGLE 2P)\\
 
 
-
 void Image::ScanLineDDA(int x0, int y0, int x1, int y1, std::vector<Cell>& table){
-    // Busquem les diferenciés entre les coordenades x i y dels punts inicials i finals
-    int difx =  x1-x0;
-    int dify = y1-y0;
-    // Amb std:: cridem la funció sqrt (arrel), la qual utilitzem per calcular la longitud de la línia en base a l'arrel dels quadrats de la componenet del vector entre el punt final i inicial)
-    float d = std::sqrt(std::pow(difx, 2) + std::pow(dify, 2));
-    
-    // Definim la direcció normalitzada de la línia com un vector
-    Vector2 direccio =  Vector2(difx/d, dify/d);
-    // Definim el propi vector amb coordenades inicials x0 i y0
-    Vector2 A = Vector2(x0, y0);
+   
+    if (y0 > y1) { //busquem tenir les cordenades de 0 com a les mínimes (fem canvis si es necessari)
 
-    //iterem tantes vegades com a pixels del x0y0 a xy hi hagi
-    for (int i = 0; i < d; i++) {
-        
-        
-        
-        
-        // Check if A is within the bounds of the table
-//        if (A.x >= 0 && A.x < tableWidth && A.y >= 0 && A.y < tableHeight) {
-//            // Update minX and maxX values in the table
-//            int tableIndex = static_cast<int>(A.y) * tableWidth + static_cast<int>(A.x);
-//            table[tableIndex].minX = std::min(table[tableIndex].minX, static_cast<int>(A.x));
-//            table[tableIndex].maxX = std::max(table[tableIndex].maxX, static_cast<int>(A.x));
-//        }
+        std::swap(x0, x1);
+        std::swap(y0, y1);
 
-        
-        
-        A.operator+=(direccio);
     }
+
+    int difx = x1 - x0;
+    int dify = y1 - y0;
+    float maxy = std::max(1,dify);//evitem divisions entre 0
+    float pen = difx / maxy; //pas de x per cada iteracio
+    float x2 = x0; //var aux per comoditat
+
+    for (int i = y0; i < y1; i++) {
+
+        if (i >= 0 && i < table.size()) { //i dins de rang de table (que no surti)
+
+            if (table[i].min_x > x2) {
+                table[i].min_x=x2;
+
+            }
+            if (table[i].max_x < x2) {
+                table[i].max_x = x2;
+
+            }
+            
+        }
+        x2 = x2 + pen;
+    }
+
 }
 
 
 
-
 void Image::DrawTriangle(const Vector2& p0,const Vector2& p1, const Vector2& p2, const Color& borderColor, bool isFilled, const Color& fillColor){
-    
-    
-    // BORDE DEL TRIANGLE (0,5p)
-    DrawLineDDA(p0.x, p0.y, p1.x, p1.y, borderColor);
-    DrawLineDDA(p1.x, p1.y, p2.x, p2.y, borderColor);
-    DrawLineDDA(p2.x, p2.y, p0.x, p0.y, borderColor);
 
-    // creas una taula amb un maxim de les mides de p0 p1 p2 
+    int puntomax = std::max({ p0.y,p1.y,p2.y }); //busquem el punt d'altura maxima (y max)
+    std::vector<Cell> table(puntomax); //creem taula amb aquell punt com a maxim per no passarsnos
+
+    if (isFilled == true) {
+
+            //actualitzem valors taula
+            ScanLineDDA(p0.x, p0.y, p1.x, p1.y, table);
+            ScanLineDDA(p1.x, p1.y, p2.x, p2.y, table);
+            ScanLineDDA(p2.x, p2.y, p0.x, p0.y, table);
+
+        int puntomin = static_cast<int>(std::min({ p0.y,p1.y,p2.y })); //trobem minim
+        for (int i = puntomin; i < table.size(); i++) {
+
+            if (table[i].min_x < table[i].max_x) {
+                for (int j = table[i].min_x + 1; j < table[i].max_x; j++) {
+                    SetPixelSafe(j, i, fillColor);
+                }
+            }
+        }
+    }
+    //dibuixem bordes triangle
+       DrawLineDDA(p0.x, p0.y, p1.x, p1.y, borderColor);
+       DrawLineDDA(p1.x, p1.y, p2.x, p2.y, borderColor);
+       DrawLineDDA(p2.x, p2.y, p0.x, p0.y, borderColor);
 }
     
     
@@ -603,7 +621,72 @@ void Image::DrawTriangle(const Vector2& p0,const Vector2& p1, const Vector2& p2,
         }
     }
     
+
+
+
+                                //PARTICULES ANIMACIÓ\\
+
+
+void ParticleSystem::Init(){
+    for(int i=0; i<MAX_PARTICLES;i++){
+        Vector2 pos(std::rand()%(1280+1),std::rand()% (720+1));
+        particles[i].inactive=false;
+        particles[i].position=pos;
+        particles[i].color.Random();
+        particles[i].velocity.Random(200);
+        particles[i].acceleration=80;
+        particles[i].ttl=15;
+                    
+    }
     
+}
+void ParticleSystem::Render(Image* framebuffer){
+    framebuffer-> Fill(Color::BLACK);
+    for(int i=0; i<MAX_PARTICLES;i++){
+        if(particles[i].inactive==false){
+            framebuffer->SetPixelSafe(particles[i].position.x, particles[i].position.y,particles[i].color);
+            framebuffer->SetPixelSafe(particles[i].position.x, particles[i].position.y,particles[i].color);
+            
+        }
+        
+    }
+    
+    
+    
+    //UPDATE
+}
+
+void ParticleSystem::Update(float dt) {
+    for (int i = 0; i < MAX_PARTICLES; i++) {
+        if (!particles[i].inactive) {
+            // Obtén el vector de velocidad actual
+            Vector2 currentVelocity = particles[i].velocity;
+
+            // Calcula la rotación del vector de velocidad para un movimiento circular uniforme
+            float angularSpeed = 2.0 * M_PI;  // Velocidad angular para un MCU (en radianes por segundo)
+            float rotation = angularSpeed * dt;
+
+            // Rota el vector de velocidad
+            particles[i].velocity.x = currentVelocity.x * cos(rotation) - currentVelocity.y * sin(rotation);
+            particles[i].velocity.y = currentVelocity.x * sin(rotation) + currentVelocity.y * cos(rotation);
+
+            // Actualiza la posición de la partícula utilizando el nuevo vector de velocidad
+            particles[i].position.x += particles[i].velocity.x * dt;
+            particles[i].position.y += particles[i].velocity.y * dt;
+
+            // Modifica la aceleración y el tiempo de vida (ttl) según sea necesario
+            particles[i].acceleration += 80.0 * dt;
+            particles[i].ttl -= dt;
+
+            // Verifica si la partícula ha alcanzado el final de su vida útil
+            if (particles[i].ttl <= 0.0) {
+                particles[i].inactive = true;
+            }
+        }
+    }
+}
+
+
     
 
 
@@ -665,8 +748,7 @@ FloatImage::~FloatImage()
 }
 
 // Change image size (the old one will remain in the top-left corner)
-void FloatImage::Resize(unsigned int width, unsigned int height)
-{
+void FloatImage::Resize(unsigned int width, unsigned int height){
 	float* new_pixels = new float[width * height];
 	unsigned int min_width = this->width > width ? width : this->width;
 	unsigned int min_height = this->height > height ? height : this->height;
@@ -680,3 +762,4 @@ void FloatImage::Resize(unsigned int width, unsigned int height)
 	this->height = height;
 	pixels = new_pixels;
 }
+                                    

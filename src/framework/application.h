@@ -12,6 +12,8 @@ class Application
 {
 public:
 
+    //PARTICLE SYSTEM
+    ParticleSystem ps;
 	// Window
 
 	SDL_Window* window = nullptr;
@@ -44,6 +46,21 @@ public:
     int recta=0;
     int x0_r;
     int y0_r;
+    int borde=0;
+    Vector2 v1={200,100};
+    Vector2 v2={300,200};
+    Vector2 v3={200,500};
+    
+    // Definim els diferents exercicis
+    bool Exercici_1 = false;
+    bool Exercici_2 = false;
+    bool Exercici_3 = false;
+    bool Exercici_4 = false;
+    bool PAINT = false;
+    bool ANIMATION = false;
+    bool F = false;
+    bool MASF = false;
+    bool MENOSF = false;
     
                                                 //IMAGES \\
     // Definicions de les imatges dels botons
@@ -59,6 +76,7 @@ public:
     Image eraser;
     //colors
     Image red;
+    Image groc;
     Image blue;
     Image pink;
     Image green;
@@ -72,9 +90,7 @@ public:
     Button* line_b = new Button( line, 0,720,32,688,true);
     Button* circle_b = new Button( circle, 35,720 ,67,688,true);
     Button* rectangle_b = new Button( rectangle, 70,720 ,102,688,true);
-    
-    //MIRAR LO DE TRIANGLE
-    Button* triangle_b = new Button( triangle, 300,this->window_height ,500,this->window_height-200,true);
+    Button* triangle_b = new Button( triangle, 237,720 ,269,688,true);
     
     
     Button* clear_b = new Button( clear, 105,720 ,137,688,true);
@@ -86,6 +102,7 @@ public:
     Button* cyan_b = new Button( cyan, 415,16 ,447,48,false);
     Button* pink_b = new Button( pink, 365,16 ,397,48,false);
     Button* blue_b = new Button( blue, 265,16 ,297,48,false);
+    Button* groc_b = new Button( groc, 313,16 ,345,48,false);
     
     
     

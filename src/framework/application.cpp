@@ -41,16 +41,12 @@ void Application::Init(void)
 {
 	std::cout << "Initiating app..." << std::endl;
     
+    ps.Init();
+    
     framebuffer.Fill(Color::BLACK);
     //CODI PER CARREGAR LES IMATGES AL INICIALITZAR L'APP
     // carreguem dins de la variable toolbar (de tipus Imatge) la imatge toolbar alhora que comprobem si aquesta ultima existeix.
-    
-    if(toolbar.LoadPNG("images/toolbar.png", false)){
-        std::cout << "Image found!" << std::endl;
-    }else{
-        std::cout << "Image not found!" << std::endl;
-        
-    }
+    toolbar.LoadPNG("images/toolbar.png", false);
     // MOSTREM LES IMATGES DELS BOTONS DEMANATS PER PANTALLA
     
     // Guardem les imatges dins de les variabwles
@@ -70,6 +66,7 @@ void Application::Init(void)
     blue.LoadPNG("images/blue.png", false);
     pink.LoadPNG("images/pink.png", false);
     green.LoadPNG("images/green.png", false);
+    groc.LoadPNG("images/groc.png", false);
     
     
     
@@ -93,50 +90,62 @@ void Application::Init(void)
 
 void Application::Render(void)
 {
-    
-//      EXERCICI 1: IMPLEMENT NOSTRE (DRAWLINEDDA 1p) \\
-    
-//        framebuffer.DrawLineDDA(x, y, x + 200* cos(i), y+ 200 * sin(i), Color::BLUE);
-    
-    
-//      EXERCICI 2: IMPLEMENTACIÓ NOSTRE (Drawing Rectangles (1 point)) \\
-    
-// framebuffer.DrawRect(300, 200, 500, 200, Color::RED, 8, true, Color::BLUE;
-    
-
-//      EXERCICI 3: IMPLEMENTACIÓ NOSTRE DE (3.3 Rasterizing Circles (2 points) \\
-    
-//    framebuffer.DrawCircle(this->window_width / 2, this->window_height / 2, 100, Color::RED,4, true,Color::BLUE);
-    
-    
-//      EXERCICI 4 IMPLEMENT NOSTRE DE (DRAWTRIANGLE 2P)\\
-    
-    
-    
-    
-//      EXERCICI 5 IMPLEMENT NOSTRE DE (DRAWIMAGE 0.5p)\\
-//  definim  una linia de codi per entrar la toolbar en el nostre framebuffer (ha d'estar al (0,0)).
-    
-    //Entrem la toolbar com a referencia pels nostres butons més petits
-    framebuffer.DrawImage(toolbar, 0, 0, false);
-    //Entrem les imatges al buffer.
-    framebuffer.DrawImage(line, 0, 0, true);
-    framebuffer.DrawImage(circle, 35, 0, true);
-    framebuffer.DrawImage(rectangle, 70, 0, true);
-    framebuffer.DrawImage(clear, 105, 0, true);
-    framebuffer.DrawImage(load, 140, 0, true);
-    framebuffer.DrawImage(eraser, 175, 0, true);
-    framebuffer.DrawImage(fill, 205, 0, true);
-    framebuffer.DrawImage(triangle, 237, 0, true);
-    //Entrem les imatges dels colors al buffer.
-    framebuffer.DrawImage(red, 165, 16, false);
-    framebuffer.DrawImage(black, 115, 16, false);
-    framebuffer.DrawImage(green, 215, 16, false);
-    framebuffer.DrawImage(cyan, 415, 16, false);
-    framebuffer.DrawImage(pink, 365, 16, false);
-    framebuffer.DrawImage(blue, 265, 16, false);
   
-    
+    if(Exercici_1){
+        //framebuffer.Fill(Color::BLACK);
+        framebuffer.DrawLineDDA(this->window_width/2, this->window_height/2, this->window_width/2+100, this->window_height/2+100,  Color::RED);
+
+
+    }else if(Exercici_2){
+        framebuffer.Fill(Color::BLACK);
+        framebuffer.DrawRect(this->window_width / 2, this->window_height / 2, 500, 200, Color::RED, 10+borde, fill_cnt, Color::BLUE);
+                             
+    }else if(Exercici_3){
+            framebuffer.DrawCircle(this->window_width / 2, this->window_height / 2, 100, Color::RED,4+borde, fill_cnt,Color::BLUE);
+
+    }else if(Exercici_4){
+        framebuffer.DrawTriangle(v1,v2,v3,Color::BLUE,fill_cnt,Color::RED);
+
+    }else if(PAINT){
+        int opcio=0;
+        Color color_b= Color::BLUE;
+        bool fill_cnt=false;
+        framebuffer.DrawImage(toolbar, 0, 0, false);
+        //Entrem les imatges al buffer.
+        framebuffer.DrawImage(line, 0, 0, true);
+        framebuffer.DrawImage(circle, 35, 0, true);
+        framebuffer.DrawImage(rectangle, 70, 0, true);
+        framebuffer.DrawImage(clear, 105, 0, true);
+        framebuffer.DrawImage(load, 140, 0, true);
+        framebuffer.DrawImage(eraser, 175, 0, true);
+        framebuffer.DrawImage(fill, 205, 0, true);
+        framebuffer.DrawImage(triangle, 237, 0, true);
+        //Entrem les imatges dels colors al buffer.
+        framebuffer.DrawImage(red, 165, 16, false);
+        framebuffer.DrawImage(groc, 313, 16, false);
+        framebuffer.DrawImage(black, 115, 16, false);
+        framebuffer.DrawImage(green, 215, 16, false);
+        framebuffer.DrawImage(cyan, 415, 16, false);
+        framebuffer.DrawImage(pink, 365, 16, false);
+        framebuffer.DrawImage(blue, 265, 16, false);
+
+
+    }else if(ANIMATION){
+        ps.Init();
+        ps.Render(&framebuffer);
+
+
+    }else if(F){
+        fill_cnt=true;
+        
+    }else if(MASF){
+        std::cout << "ara el fill esta true." << std::endl;
+        
+        
+    }else if(MENOSF){
+        borde=borde-1;
+    }
+
     framebuffer.Render();
 }
 
@@ -146,7 +155,7 @@ void Application::Render(void)
 // Called after render
 void Application::Update(float seconds_elapsed)
 {
-
+    ps.Update(seconds_elapsed);
 }
 
 
@@ -157,6 +166,119 @@ void Application::OnKeyPressed( SDL_KeyboardEvent event )
 	// KEY CODES: https://wiki.libsdl.org/SDL2/SDL_Keycode
 	switch(event.keysym.sym) {
 		case SDLK_ESCAPE: exit(0); break; // ESC key, kill the app
+            
+            
+            //EX 1- DRAW LINES
+        case SDLK_1:
+            framebuffer.Fill(Color::BLACK);
+            Exercici_1 = true;
+            Exercici_2 = false;
+            Exercici_3 = false;
+            Exercici_4 = false;
+            PAINT = false;
+            ANIMATION = false;
+            F = false;
+            MASF = false;
+            MENOSF = false;
+            break;
+
+            //EX 2- DRAW RECT
+        case SDLK_2:
+            framebuffer.Fill(Color::BLACK);
+            Exercici_1 = false;
+            Exercici_2 = true;
+            Exercici_3 = false;
+            Exercici_4 = false;
+            PAINT = false;
+            ANIMATION = false;
+            F = false;
+            MASF = false;
+            MENOSF = false;
+            break;
+
+            //EX 3- DRAW CIRCLE
+        case SDLK_3:
+            framebuffer.Fill(Color::BLACK);
+            Exercici_1 = false;
+            Exercici_2 = false;
+            Exercici_3 = true;
+            Exercici_4 = false;
+            PAINT = false;
+            ANIMATION = false;
+            F = false;
+            MASF = false;
+            MENOSF = false;
+            break;
+        
+            //EX 4- DRAW Triangle
+        case SDLK_4:
+            framebuffer.Fill(Color::BLACK);
+            Exercici_1 = false;
+            Exercici_2 = false;
+            Exercici_3 = false;
+            Exercici_4 = true;
+            PAINT = false;
+            ANIMATION = false;
+            F = false;
+            MASF = false;
+            MENOSF = false;
+            break;
+
+            //EX 5- PAINT (CREATIVE MODE)
+        case SDLK_5:
+            framebuffer.Fill(Color::BLACK);
+            Exercici_1 = false;
+            Exercici_2 = false;
+            Exercici_3 = false;
+            Exercici_4 = false;
+            PAINT = true;
+            ANIMATION = false;
+            F = false;
+            MASF = false;
+            MENOSF = false;
+            break;
+
+            //EX 6- DRAW ANIMATION
+        case SDLK_6:
+            framebuffer.Fill(Color::BLACK);
+            Exercici_1 = false;
+            Exercici_2 = false;
+            Exercici_3 = false;
+            Exercici_4 = false;
+            PAINT = false;
+            ANIMATION = true;
+            F = false;
+            MASF = false;
+            MENOSF = false;
+            break;
+        
+            //FUNCIÓ FILL
+        case SDLK_f:
+            framebuffer.Fill(Color::BLACK);
+            Exercici_1 = false;
+            Exercici_2 = false;
+            Exercici_3 = false;
+            Exercici_4 = false;
+            PAINT = false;
+            ANIMATION = false;
+            F = true;
+            MASF = false;
+            MENOSF = false;
+
+            break;
+            
+            //FUNCIÓ (+)
+        case SDLK_PLUS:
+            framebuffer.Fill(Color::BLACK);
+            borde++;
+
+
+            break;
+            
+            //FUNCIÓ (per augmentar el contorn de les formes dibuixades)
+        case SDLK_MINUS:
+            framebuffer.Fill(Color::BLACK);
+            borde--;
 	}
 }
 
@@ -174,59 +296,52 @@ void Application::OnMouseButtonUp( SDL_MouseButtonEvent event )
 
                                 //OPCIONS\\
         
-        std::cout << "pitjat" << std::endl;
         
        // EXERCICI 1: IMPLEMENT NOSTRE (DRAWLINEDDA 1p) \\ OPCIO 1
         
         if (line_b->IsMouseInside(mouse_position)==true){
-            std::cout << "PITJAT line" << std::endl;
             opcio=1;
         }
         
        // EXERCICI 3: IMPLEMENTACIÓ NOSTRE DE (3.3 Rasterizing Circles (2 points) \\ OPCIO 2
         
         else if (circle_b->IsMouseInside(mouse_position)==true){
-            std::cout << "PITJAT circle" << std::endl;
             opcio=2;
         }
         
         // EXERCICI 2: IMPLEMENTACIÓ NOSTRE (Drawing Rectangles (1 point)) \\ OPCIO 3
         
         else if (rectangle_b->IsMouseInside(mouse_position)==true){
-            std::cout << "PITJAT rectangle" << std::endl;
             opcio=3;
         }
         
         // EXERCICI 4 IMPLEMENT NOSTRE DE (DRAWTRIANGLE 2P)\\ OPCIO 4
         
         else if (triangle_b->IsMouseInside(mouse_position)==true){
-            std::cout << "PITJAT triangle" << std::endl;
             opcio=4;
         }
                             // FILL + CLEAR \\
         
         else if (fill_b->IsMouseInside(mouse_position)==true){
-            std::cout << "PITJAT fill" << std::endl;
             fill_cnt=true;
         }else if (clear_b->IsMouseInside(mouse_position)==true){
-            std::cout << "PITJAT clear" << std::endl;
             framebuffer.Fill(Color::BLACK);
             opcio=0;
         }
                                 //COLORS \\
         
         else if (red_b->IsMouseInside(mouse_position)==true){
-            std::cout << "PITJAT red" << std::endl;
             color_b=Color::RED;
         }else if (blue_b->IsMouseInside(mouse_position)==true){
-            std::cout << "PITJAT blue" << std::endl;
             color_b=Color::BLUE;
         }else if (cyan_b->IsMouseInside(mouse_position)==true){
-            std::cout << "PITJAT cyan" << std::endl;
             color_b=Color::CYAN;
         }else if (green_b->IsMouseInside(mouse_position)==true){
-            std::cout << "PITJAT green" << std::endl;
             color_b=Color::GREEN;
+        }else if (groc_b->IsMouseInside(mouse_position)==true){
+            color_b=Color::YELLOW;
+        }else if (pink_b->IsMouseInside(mouse_position)==true){
+            color_b=Color::PURPLE;
         }
         
         
@@ -246,6 +361,7 @@ void Application::OnMouseButtonUp( SDL_MouseButtonEvent event )
             }else if (opcio==3){
                 framebuffer.DrawRect(mouse_position.x, mouse_position.y, 100, 200, color_b, 8, fill_cnt, Color::BLUE);
             }else if (opcio==4){
+                framebuffer.DrawTriangle(v1,v2,v3,color_b,fill_cnt,Color::BLUE);
                 //dibuix triangle
             }
             

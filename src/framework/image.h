@@ -86,21 +86,21 @@ public:
     
     
     
-    
+    //__________________________________PRACTICA 1_________________________________________________
     
                                 // CODI NOSTRE PRACTICA 1 \\
 
     // EXERCICI 1 IMPLEMENT NOSTRE  DE (DRAWLINEDDA 1p)
     void DrawLineDDA(int x0, int y0, int x1, int y1, const Color& c);
-    
+
     // EXERCICI 2 IMPLEMENT NOSTRE DE ( DRAWRECT 1P)
     void DrawRect(int x, int y, int w, int h, const Color& borderColor, int borderWidth, bool isFilled, const Color& fillColor);
-    
+
     // EXERCICI 3 IMPLEMENT NOSTRE DE (DRAWCIRCLE 2p)
     void DrawCircle(int x, int y, int r, const Color & borderColor,int borderWidth, bool fill, const Color& fillColor);
-    
+
     // EXERCICI 4 IMPLEMENT NOSTRE DE (DRAWTRIANGLE 2P)
-    
+
         //estructura Cell
     struct Cell{
         int min_x=INT_MAX;
@@ -108,16 +108,16 @@ public:
     };
         //funció ScanLineDDA
     void ScanLineDDA(int x0, int y0, int x1, int y1, std::vector<Cell>& table);
-    
+
         //funció DrawTriangle
     void DrawTriangle(const Vector2& p0, const Vector2& p1, const Vector2& p2, const Color& borderColor, bool isFilled, const Color& fillColor);
-    
-    
+
+
     //EXERCICI 5 IMPLEMENT NOSTRE DE (DRAWIMAGE 0.5p)
     void DrawImage(const Image& image, int x, int y, bool top);
-    
-        
-  
+
+
+
     
     
     
@@ -147,26 +147,6 @@ public:
 // Image storing one float per pixel instead of a 3 or 4 component Color
 //PARTICULES:
 
-class ParticleSystem {
-
-        static const int MAX_PARTICLES = 970;
-
-        struct Particle {
-                Vector2 position;
-                Vector2 velocity; // Normalized speed and direction of the particle
-                Color color;
-                float acceleration;
-                float ttl; // Time left until the particle expires
-                bool inactive; // Particle is not used/expired, so it can be recreated
-        };
-
-        Particle particles[MAX_PARTICLES];
-
-public:
-        void Init();//inicialitza
-        void Render(Image* framebuffer);//imprimeix per pantalla
-        void Update(float dt);//actualitza
-};
 
 class FloatImage
 {
@@ -199,62 +179,97 @@ public:
 };
 
 
+
+
+
+
+
+
+
+
+//__________________________________PRACTICA 1_________________________________________________
+
+
+// DEFINICIÓ DE LA CLASE Particlesystem _________________________________________________________
+
+//class ParticleSystem {
+//
+//        static const int MAX_PARTICLES = 970;
+//
+//        struct Particle {
+//                Vector2 position;
+//                Vector2 velocity; // Normalized speed and direction of the particle
+//                Color color;
+//                float acceleration;
+//                float ttl; // Time left until the particle expires
+//                bool inactive; // Particle is not used/expired, so it can be recreated
+//        };
+//
+//        Particle particles[MAX_PARTICLES];
+//
+//public:
+//        void Init();//inicialitza
+//        void Render(Image* framebuffer);//imprimeix per pantalla
+//        void Update(float dt);//actualitza
+//};
+
+
 // DEFINICIÓ DE LA CLASE BUTTON _________________________________________________________
 
-//CLASE BUTTON
-class Button{
-private:
-
-    //ATRIBUTS
-    Image image;
-    bool top;
-    float positionx0;
-    float positionx;
-    float positiony0;
-    float positiony;
-
-public:
-    //FUNCIONS
-    //CONSTRUCTOR
-    Button(Image im,int px0, int py0, int px, int py, bool t){
-        image=im;
-        positionx=px;
-        positiony=py;
-        positionx0=px0;
-        positiony0=py0;
-        top=t;
-    }
-    //geters
-    float getPostitionx0 ( ){
-        return positionx0;
-    }
-    float getPostitiony0 ( ){
-        return positiony0;
-    }
-    float getPostitionx ( ){
-        return positionx;
-    }
-    float getPostitiony ( ){
-        return positiony;
-    }
-    bool getTop ( ){
-        return top;
-        
-    }
-    bool IsMouseInside(Vector2 mousePosition){
-        if (positionx0 <= mousePosition.x & mousePosition.x <= positionx){
-            // la y0 es el max si el botton es top = true
-            if (top==true) {
-                if  (positiony0>= mousePosition.y & mousePosition.y >= positiony){
-                    return true; // maus entre y< maus.y <y0
-                }
-            }else{
-                // la y0 es 0 si el botton es top = false
-                if (positiony0 <= mousePosition.y & mousePosition.y <= positiony){
-                    return true; // maus entre y0< maus.y <y
-                }
-            }
-            return false;
-        }
-    }
-};
+////CLASE BUTTON
+//class Button{
+//private:
+//
+//    //ATRIBUTS
+//    Image image;
+//    bool top;
+//    float positionx0;
+//    float positionx;
+//    float positiony0;
+//    float positiony;
+//
+//public:
+//    //FUNCIONS
+//    //CONSTRUCTOR
+//    Button(Image im,int px0, int py0, int px, int py, bool t){
+//        image=im;
+//        positionx=px;
+//        positiony=py;
+//        positionx0=px0;
+//        positiony0=py0;
+//        top=t;
+//    }
+//    //geters
+//    float getPostitionx0 ( ){
+//        return positionx0;
+//    }
+//    float getPostitiony0 ( ){
+//        return positiony0;
+//    }
+//    float getPostitionx ( ){
+//        return positionx;
+//    }
+//    float getPostitiony ( ){
+//        return positiony;
+//    }
+//    bool getTop ( ){
+//        return top;
+//
+//    }
+//    bool IsMouseInside(Vector2 mousePosition){
+//        if (positionx0 <= mousePosition.x & mousePosition.x <= positionx){
+//            // la y0 es el max si el botton es top = true
+//            if (top==true) {
+//                if  (positiony0>= mousePosition.y & mousePosition.y >= positiony){
+//                    return true; // maus entre y< maus.y <y0
+//                }
+//            }else{
+//                // la y0 es 0 si el botton es top = false
+//                if (positiony0 <= mousePosition.y & mousePosition.y <= positiony){
+//                    return true; // maus entre y0< maus.y <y
+//                }
+//            }
+//            return false;
+//        }
+//    }
+//};

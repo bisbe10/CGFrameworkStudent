@@ -368,7 +368,7 @@ void Image::DrawLineDDA(int x0, int y0, int x1, int y1, const Color &c){
         SetPixel(floor(A.x), floor(A.y), c);
         
         //operator:funció de A que defineix el tipus de clase de "+=" [ aquesta linia suma la direcció i la distancia 1 al nostre vector normalitzat A] així doncs a va guanyant distancia del punt x0 y0 a x y
-        A.operator+=(direccio);
+        A+=(direccio);
     }
 }
 

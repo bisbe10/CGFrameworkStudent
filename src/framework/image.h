@@ -80,10 +80,21 @@ public:
 
 	void DrawRect(int x, int y, int w, int h, const Color& c);
     
-    
-    
-    
-    
+    // Used to easy code
+    #ifndef IGNORE_LAMBDAS
+
+    // Applies an algorithm to every pixel in an image
+    // you can use lambda sintax:   img.forEachPixel( [](Color c) { return c*2; });
+    // or callback sintax:   img.forEachPixel( mycallback ); //the callback has to be Color mycallback(Color c) { ... }
+    template <typename F>
+    Image& ForEachPixel( F callback )
+    {
+        for(unsigned int pos = 0; pos < width*height; ++pos)
+            pixels[pos] = callback(pixels[pos]);
+        return *this;
+    }
+    #endif
+   
     
     
     //__________________________________PRACTICA 1_________________________________________________
@@ -116,78 +127,42 @@ public:
     //EXERCICI 5 IMPLEMENT NOSTRE DE (DRAWIMAGE 0.5p)
     void DrawImage(const Image& image, int x, int y, bool top);
 
-
-
-    
-    
-    
-    
-    
-    
-    
-    
-    
-    
-	// Used to easy code
-	#ifndef IGNORE_LAMBDAS
-
-	// Applies an algorithm to every pixel in an image
-	// you can use lambda sintax:   img.forEachPixel( [](Color c) { return c*2; });
-	// or callback sintax:   img.forEachPixel( mycallback ); //the callback has to be Color mycallback(Color c) { ... }
-	template <typename F>
-	Image& ForEachPixel( F callback )
-	{
-		for(unsigned int pos = 0; pos < width*height; ++pos)
-			pixels[pos] = callback(pixels[pos]);
-		return *this;
-	}
-	#endif
 };
 
 // Image storing one float per pixel instead of a 3 or 4 component Color
-//PARTICULES:
-
-
 class FloatImage
 {
 public:
-	unsigned int width;
-	unsigned int height;
-	float* pixels;
+    unsigned int width;
+    unsigned int height;
+    float* pixels;
 
-	// CONSTRUCTORS 
-	FloatImage() { width = height = 0; pixels = NULL; }
-	FloatImage(unsigned int width, unsigned int height);
-	FloatImage(const FloatImage& c);
-	FloatImage& operator = (const FloatImage& c); //assign operator
+    // CONSTRUCTORS
+    FloatImage() { width = height = 0; pixels = NULL; }
+    FloatImage(unsigned int width, unsigned int height);
+    FloatImage(const FloatImage& c);
+    FloatImage& operator = (const FloatImage& c); //assign operator
 
-	//destructor
-	~FloatImage();
+    //destructor
+    ~FloatImage();
 
-	void Fill(const float& v) { for (unsigned int pos = 0; pos < width * height; ++pos) pixels[pos] = v; }
+    void Fill(const float& v) { for (unsigned int pos = 0; pos < width * height; ++pos) pixels[pos] = v; }
 
-	//get the pixel at position x,y
-	float GetPixel(unsigned int x, unsigned int y) const { return pixels[y * width + x]; }
-	float& GetPixelRef(unsigned int x, unsigned int y) { return pixels[y * width + x]; }
+    //get the pixel at position x,y
+    float GetPixel(unsigned int x, unsigned int y) const { return pixels[y * width + x]; }
+    float& GetPixelRef(unsigned int x, unsigned int y) { return pixels[y * width + x]; }
 
-	//set the pixel at position x,y with value C
-	inline void SetPixel(unsigned int x, unsigned int y, const float& v) { pixels[y * width + x] = v; }
+    //set the pixel at position x,y with value C
+    inline void SetPixel(unsigned int x, unsigned int y, const float& v) { pixels[y * width + x] = v; }
 
-	void Resize(unsigned int width, unsigned int height);
+    void Resize(unsigned int width, unsigned int height);
     
 
 };
+    
 
-
-
-
-
-
-
-
-
-
-//__________________________________PRACTICA 1_________________________________________________
+//PARTICULES:
+//___________________________PRACTICA 1 DEF CLASES (FORA DEF  D'IMAGE)__________________________________________
 
 
 // DEFINICIÓ DE LA CLASE Particlesystem _________________________________________________________

@@ -7,6 +7,9 @@
 #include "main/includes.h"
 #include "framework.h"
 #include "image.h"
+//important incluir la mesh
+#include "mesh.h"
+#include "entity.h"
 
 class Application
 {
@@ -38,6 +41,28 @@ public:
 	// CPU Global framebuffer
     
     Image framebuffer;
+    
+    // Constructor and main methods
+    Application(const char* caption, int width, int height);
+    ~Application();
+
+    void Init( void );
+    void Render( void );
+    void Update( float dt );
+
+    // Other methods to control the app
+    void SetWindowSize(int width, int height) {
+        glViewport( 0,0, width, height );
+        this->window_width = width;
+        this->window_height = height;
+    }
+
+    Vector2 GetWindowSize()
+    {
+        int w,h;
+        SDL_GetWindowSize(window,&w,&h);
+        return Vector2(float(w), float(h));
+    }
 
     
     //-----------VARIABLES NECESSARIES PER L'EXERICIC5 [ Create a drawing tool (2.5 points)]----------------
@@ -112,9 +137,19 @@ public:
     //                  //PRACTICA 2\\
     
     // ---------------------DEFINICIONS DE VARIABLES I INSTANCIES PER LA PRACTICA 2--------------------------
-    //Mesh * anna_m= new Mesh();
-    //anna_m.LoadOBJ("meshes/anna.obj");
     
+    //                                                //MESHES \\
+    Mesh *anna;
+    
+    
+    
+    //                                                //MATRIX \\
+
+    //les matrius estan definides a framework.h
+    //Matrix44
+    
+    
+    //                                                //ENTITIES \\
     //Entity* entity1 = new Entity(anna_m,
     
     
@@ -125,8 +160,8 @@ public:
     
     
     
-    
-    
+//FINAL DE LA DECLARACIÓ DE LA CLASE APPLICATION
+};
     
     
     
@@ -143,27 +178,7 @@ public:
     
     
     
-	// Constructor and main methods
-	Application(const char* caption, int width, int height);
-	~Application();
 
-	void Init( void );
-	void Render( void );
-	void Update( float dt );
-
-	// Other methods to control the app
-	void SetWindowSize(int width, int height) {
-		glViewport( 0,0, width, height );
-		this->window_width = width;
-		this->window_height = height;
-	}
-
-	Vector2 GetWindowSize()
-	{
-		int w,h;
-		SDL_GetWindowSize(window,&w,&h);
-		return Vector2(float(w), float(h));
-	}
     
-};
+
 

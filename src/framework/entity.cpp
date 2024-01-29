@@ -4,7 +4,6 @@
 //
 //  Created by Miquel Bisbe Armengol on 26/1/24.
 //
-#pragma once
 
 #include "main/includes.h"
 #include <map>

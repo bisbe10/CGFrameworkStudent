@@ -41,6 +41,16 @@ void Application::Init(void)
 {
 	std::cout << "Initiating app..." << std::endl;
     
+    anna->LoadOBJ("meshes/anna.obj");
+    
+    
+    
+    
+    
+    
+    
+    
+    
 //    ps.Init();
 //
 //    framebuffer.Fill(Color::BLACK);
@@ -76,7 +86,6 @@ void Application::Init(void)
 
 
 //CODI NOSTRE EXERCICIS----------------------------(RENDER())--------------------------
-// Render one frame
 
 
 void Application::Render(void)
@@ -173,6 +182,23 @@ void Application::OnKeyPressed( SDL_KeyboardEvent event )
 	// KEY CODES: https://wiki.libsdl.org/SDL2/SDL_Keycode
 	switch(event.keysym.sym) {
 		case SDLK_ESCAPE: exit(0); break; // ESC key, kill the app
+            
+            
+            
+//                    ------------------PRACTICA 2-----------------
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
+            
             
             
             
@@ -292,6 +318,10 @@ void Application::OnKeyPressed( SDL_KeyboardEvent event )
 //        case SDLK_MINUS:
 //            framebuffer.Fill(Color::BLACK);
 //            borde--;
+           
+            
+                //FINAL DE OnKeyPressed( SDL_KeyboardEvent event )\\
+            
 	}
 }
 
@@ -310,9 +340,6 @@ void Application::OnMouseButtonDown( SDL_MouseButtonEvent event )
 void Application::OnMouseButtonUp( SDL_MouseButtonEvent event )
 {
 	if (event.button == SDL_BUTTON_LEFT) {
-        
-        
-        
         
         
         
@@ -391,6 +418,8 @@ void Application::OnMouseButtonUp( SDL_MouseButtonEvent event )
 //            }
 //
 //        }
+                    //FINAL DE OnMouseButtonUp( SDL_MouseButtonEvent event )\\
+        
     }
 }
 

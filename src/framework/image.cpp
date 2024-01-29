@@ -310,33 +310,10 @@ bool Image::SaveTGA(const char* filename)
 	return true;
 }
 
-void Image::DrawRect(int x, int y, int w, int h, const Color& c)
-{
-	for (int i = 0; i < w; ++i) {
-		SetPixel(x + i, y, c);
-		SetPixel(x + i, y + h - 1, c);
-	}
-
-	for (int j = 0; j < h; ++j) {
-		SetPixel(x, y + j, c);
-		SetPixel(x + w - 1, y + j, c);
-	}
-}
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
+                                    
 //------------------------------------PRACTICA 1:-----------------------------------------------------------\\
 
 
@@ -589,7 +566,77 @@ void Image::DrawTriangle(const Vector2& p0,const Vector2& p1, const Vector2& p2,
        DrawLineDDA(p2.x, p2.y, p0.x, p0.y, borderColor);
 }
     
-    
+
+#ifndef IGNORE_LAMBDAS
+
+// You can apply and algorithm for two images and store the result in the first one
+// ForEachPixel( img, img2, [](Color a, Color b) { return a + b; } );
+template <typename F>
+void ForEachPixel(Image& img, const Image& img2, F f) {
+    for(unsigned int pos = 0; pos < img.width * img.height; ++pos)
+        img.pixels[pos] = f( img.pixels[pos], img2.pixels[pos] );
+}
+
+#endif
+
+FloatImage::FloatImage(unsigned int width, unsigned int height)
+{
+    this->width = width;
+    this->height = height;
+    pixels = new float[width * height];
+    memset(pixels, 0, width * height * sizeof(float));
+}
+
+// Copy constructor
+FloatImage::FloatImage(const FloatImage& c) {
+    pixels = NULL;
+
+    width = c.width;
+    height = c.height;
+    if (c.pixels)
+    {
+        pixels = new float[width * height];
+        memcpy(pixels, c.pixels, width * height * sizeof(float));
+    }
+}
+
+// Assign operator
+FloatImage& FloatImage::operator = (const FloatImage& c)
+{
+    if (pixels) delete pixels;
+    pixels = NULL;
+
+    width = c.width;
+    height = c.height;
+    if (c.pixels)
+    {
+        pixels = new float[width * height * sizeof(float)];
+        memcpy(pixels, c.pixels, width * height * sizeof(float));
+    }
+    return *this;
+}
+
+FloatImage::~FloatImage()
+{
+    if (pixels)
+        delete pixels;
+}
+
+// Change image size (the old one will remain in the top-left corner)
+void FloatImage::Resize(unsigned int width, unsigned int height){
+    float* new_pixels = new float[width * height];
+    unsigned int min_width = this->width > width ? width : this->width;
+    unsigned int min_height = this->height > height ? height : this->height;
+
+    for (unsigned int x = 0; x < min_width; ++x)
+        for (unsigned int y = 0; y < min_height; ++y)
+            new_pixels[y * width + x] = GetPixel(x, y);
+
+    delete pixels;
+    this->width = width;
+    this->height = height;
+    pixels = new_pixels;
+}
  
 
 
@@ -599,166 +646,86 @@ void Image::DrawTriangle(const Vector2& p0,const Vector2& p1, const Vector2& p2,
                         //EXERCICI 5 IMPLEMENTACIÓ NOSTRE DE (DRAWIMAGE 0.5p)\\
 
 
-    void Image::DrawImage(const Image& image, int x, int y, bool top){
-        
-        //Definim l'alçada en la que dibuixarem la imatge restant l'alçada de l'imatge a la del framebuffer.
-        int alçada = this->height - image.height;
-        
-        for(int i = 0; i < image.width ; i++){
-            for(int j = 0 ; j <  image.height; j++){
-                Color color = image.GetPixelSafe(i,j);
-                
-                if(top){
-                    //this->top = true;
-                    SetPixelSafe(i+x, j+alçada, color);
-                    
-                }else{
-                    //this->top = false;
-                    SetPixelSafe(i+x, j+y , color);
-                }
-                
-            }
-        }
-    }
+//    void Image::DrawImage(const Image& image, int x, int y, bool top){
+//
+//        //Definim l'alçada en la que dibuixarem la imatge restant l'alçada de l'imatge a la del framebuffer.
+//        int alçada = this->height - image.height;
+//
+//        for(int i = 0; i < image.width ; i++){
+//            for(int j = 0 ; j <  image.height; j++){
+//                Color color = image.GetPixelSafe(i,j);
+//
+//                if(top){
+//                    //this->top = true;
+//                    SetPixelSafe(i+x, j+alçada, color);
+//
+//                }else{
+//                    //this->top = false;
+//                    SetPixelSafe(i+x, j+y , color);
+//                }
+//
+//            }
+//        }
+//    }
     
-
-
-
                                 //PARTICULES ANIMACIÓ\\
 
-
-void ParticleSystem::Init(){
-    for(int i=0; i<MAX_PARTICLES;i++){
-        Vector2 pos(std::rand()%(1280+1),std::rand()% (720+1));
-        particles[i].inactive=false;
-        particles[i].position=pos;
-        particles[i].color.Random();
-        particles[i].velocity.Random(200);
-        particles[i].acceleration=80;
-        particles[i].ttl=45;
-                    
-    }
-    
-}
-void ParticleSystem::Render(Image* framebuffer){
-    framebuffer-> Fill(Color::BLACK);
-    for(int i=0; i<MAX_PARTICLES;i++){
-        if(particles[i].inactive==false){
-            framebuffer->SetPixelSafe(particles[i].position.x, particles[i].position.y,particles[i].color);
-            framebuffer->SetPixelSafe(particles[i].position.x, particles[i].position.y,particles[i].color);
-            
-        }
-        
-    }
-    
-    
-    
-    //UPDATE
-}
-
-void ParticleSystem::Update(float dt) {
-    for (int i = 0; i < MAX_PARTICLES; i++) {
-        if (!particles[i].inactive) {
-            //ens guardem la velocitat actual
-            Vector2 vel_actual = particles[i].velocity;
-            
-            //calculem la velocitat angular i la rotació per poder calcular el mcu
-            
-            float vel_ang = 2.0 * M_PI;
-            float rotacion = vel_ang * dt;
-
-            // actualitzem velocitat, posició i acceleració
-            particles[i].velocity.x = vel_actual.x * cos(rotacion) - vel_actual.y * sin(rotacion);
-            particles[i].velocity.y = vel_actual.x * sin(rotacion) + vel_actual.y * cos(rotacion);
-
-            particles[i].position.x += particles[i].velocity.x * dt;
-            particles[i].position.y += particles[i].velocity.y * dt;
-            
-            particles[i].acceleration += 80.0 * dt;
-            particles[i].ttl -= dt;
-
-            // mirem si la particula ha finalitzat la seva vida útil
-            if (particles[i].ttl <= 0.0) {
-                particles[i].inactive = true;
-            }
-        }
-    }
-}
-
-
-    
-
-
-
-
-#ifndef IGNORE_LAMBDAS
-
-// You can apply and algorithm for two images and store the result in the first one
-// ForEachPixel( img, img2, [](Color a, Color b) { return a + b; } );
-template <typename F>
-void ForEachPixel(Image& img, const Image& img2, F f) {
-	for(unsigned int pos = 0; pos < img.width * img.height; ++pos)
-		img.pixels[pos] = f( img.pixels[pos], img2.pixels[pos] );
-}
-
-#endif
-
-FloatImage::FloatImage(unsigned int width, unsigned int height)
-{
-	this->width = width;
-	this->height = height;
-	pixels = new float[width * height];
-	memset(pixels, 0, width * height * sizeof(float));
-}
-
-// Copy constructor
-FloatImage::FloatImage(const FloatImage& c) {
-	pixels = NULL;
-
-	width = c.width;
-	height = c.height;
-	if (c.pixels)
-	{
-		pixels = new float[width * height];
-		memcpy(pixels, c.pixels, width * height * sizeof(float));
-	}
-}
-
-// Assign operator
-FloatImage& FloatImage::operator = (const FloatImage& c)
-{
-	if (pixels) delete pixels;
-	pixels = NULL;
-
-	width = c.width;
-	height = c.height;
-	if (c.pixels)
-	{
-		pixels = new float[width * height * sizeof(float)];
-		memcpy(pixels, c.pixels, width * height * sizeof(float));
-	}
-	return *this;
-}
-
-FloatImage::~FloatImage()
-{
-	if (pixels)
-		delete pixels;
-}
-
-// Change image size (the old one will remain in the top-left corner)
-void FloatImage::Resize(unsigned int width, unsigned int height){
-	float* new_pixels = new float[width * height];
-	unsigned int min_width = this->width > width ? width : this->width;
-	unsigned int min_height = this->height > height ? height : this->height;
-
-	for (unsigned int x = 0; x < min_width; ++x)
-		for (unsigned int y = 0; y < min_height; ++y)
-			new_pixels[y * width + x] = GetPixel(x, y);
-
-	delete pixels;
-	this->width = width;
-	this->height = height;
-	pixels = new_pixels;
-}
-                                    
+//
+//void ParticleSystem::Init(){
+//    for(int i=0; i<MAX_PARTICLES;i++){
+//        Vector2 pos(std::rand()%(1280+1),std::rand()% (720+1));
+//        particles[i].inactive=false;
+//        particles[i].position=pos;
+//        particles[i].color.Random();
+//        particles[i].velocity.Random(200);
+//        particles[i].acceleration=80;
+//        particles[i].ttl=45;
+//
+//    }
+//
+//}
+//void ParticleSystem::Render(Image* framebuffer){
+//    framebuffer-> Fill(Color::BLACK);
+//    for(int i=0; i<MAX_PARTICLES;i++){
+//        if(particles[i].inactive==false){
+//            framebuffer->SetPixelSafe(particles[i].position.x, particles[i].position.y,particles[i].color);
+//            framebuffer->SetPixelSafe(particles[i].position.x, particles[i].position.y,particles[i].color);
+//
+//        }
+//
+//    }
+//
+//
+//
+//    //UPDATE
+//}
+//
+//void ParticleSystem::Update(float dt) {
+//    for (int i = 0; i < MAX_PARTICLES; i++) {
+//        if (!particles[i].inactive) {
+//            //ens guardem la velocitat actual
+//            Vector2 vel_actual = particles[i].velocity;
+//
+//            //calculem la velocitat angular i la rotació per poder calcular el mcu
+//
+//            float vel_ang = 2.0 * M_PI;
+//            float rotacion = vel_ang * dt;
+//
+//            // actualitzem velocitat, posició i acceleració
+//            particles[i].velocity.x = vel_actual.x * cos(rotacion) - vel_actual.y * sin(rotacion);
+//            particles[i].velocity.y = vel_actual.x * sin(rotacion) + vel_actual.y * cos(rotacion);
+//
+//            particles[i].position.x += particles[i].velocity.x * dt;
+//            particles[i].position.y += particles[i].velocity.y * dt;
+//
+//            particles[i].acceleration += 80.0 * dt;
+//            particles[i].ttl -= dt;
+//
+//            // mirem si la particula ha finalitzat la seva vida útil
+//            if (particles[i].ttl <= 0.0) {
+//                particles[i].inactive = true;
+//            }
+//        }
+//    }
+//}
+//--------------------------------------------------------------------------------------------------------\\

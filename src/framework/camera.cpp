@@ -94,19 +94,37 @@ void Camera::UpdateViewMatrix()
 {
 	// Reset Matrix (Identity)
 	view_matrix.SetIdentity();
+    
+    
+    //Rotation matrix
+    Matrix44 rotation_matrix;
+    rotation_matrix.SetIdentity();
+    //PAS 1 -> vector front
+    Vector3 F = center - eye; // vector entre el 
+    F.Normalize();
+    
+    //PAS 2 -> vector side
+    Vector3 S = F.Cross(up);
+    S.Normalize();
+    
+    //PAS 3 -> vector top
+    Vector3 T = S.Cross(F);
+    T.Normalize();
+    
+    // ASIGNAR ELS VECTORS A LA ROTATION MATRIX
+    // Com que l'hem inicialitzat en la identitat m[3]/m[7]/m[11]/m[12]/m[13]=0 i m[15]=1
+    rotation_matrix.m[0]=S.x; rotation_matrix.m[1]=T.x; rotation_matrix.m[2]=-F.x;
+    rotation_matrix.m[4]=S.y; rotation_matrix.m[5]=T.y; rotation_matrix.m[6]=-F.y;
+    rotation_matrix.m[8]=S.z; rotation_matrix.m[9]=T.z; rotation_matrix.m[10]=-F.z;
+    
+    //Translate local matrix
+    rotation_matrix.TranslateLocal(-eye.x, -eye.y, -eye.z);
+    
+    view_matrix=rotation_matrix;
 
 	// Comment this line to create your own projection matrix!
-	SetExampleViewMatrix(); //comentar mes endvant, haurem de fer la nostra
+	//SetExampleViewMatrix(); //comentar mes endvant, haurem de fer la nostra
 
-	// Remember how to fill a Matrix4x4 (check framework slides)
-	// Careful with the order of matrix multiplications, and be sure to use normalized vectors!
-	
-	// Create the view matrix rotation
-	// ...
-	// view_matrix.M[3][3] = 1.0;
-
-	// Translate view matrix
-	// ...
 
 	UpdateViewProjectionMatrix();
 }
@@ -116,23 +134,39 @@ void Camera::UpdateProjectionMatrix()
 {
 	// Reset Matrix (Identity)
 	projection_matrix.SetIdentity();
-
-	// Comment this line to create your own projection matrix!
-	SetExampleProjectionMatrix();
-
     
+
     // FER NOSALTRES MÉS ENDAVANT
-	// Remember how to fill a Matrix4x4 (check framework slides)
 	
 	if (type == PERSPECTIVE) {
-		// projection_matrix.M[2][3] = -1;
-		// ...
-	}
-	else if (type == ORTHOGRAPHIC) {
-		// ...
-	} 
+        float fov_r = fov*DEG2RAD; //Passem el fov a radians
+        float f = 1.0/tan(fov_r/2.0);
+         // definit al powerpoint de 3D pàgina 28
+        // definim els atributs right, left... al contructor de camera a la funció
+        
+       projection_matrix.M[0][0] = f/aspect;
+        
+        projection_matrix.M[1][1] = f;
+        
+        projection_matrix.M[2][2] = (far_plane + near_plane) / (near_plane - far_plane);
+             projection_matrix.M[2][3] = -1.0;
+        
+    projection_matrix.M[3][2] = ( 2.0 * far_plane * near_plane) / (near_plane - far_plane);
+             projection_matrix.M[3][3] = 0.0;
+    }
+    //definit al powerpoint de 3D pàgina 26 // definim els atributs right, left... al contructor de camera a la funció 
+    else if (type == ORTHOGRAPHIC) {
+    projection_matrix.M[0][0] = 2.0 / (right - left);
+           projection_matrix.M[0][3] = -1.0*((right + left)/(right - left));
+       
+    projection_matrix.M[1][1] = 2.0/(top - bottom);
+           projection_matrix.M[1][3] = -1.0*((top + bottom)/(top - bottom));
+        
+        projection_matrix.M[2][2] = -2.0/(far_plane - near_plane);
+           projection_matrix.M[2][3] = -1.0*((far_plane + near_plane)/(far_plane - near_plane));
+    }
 
-	UpdateViewProjectionMatrix();
+    UpdateViewProjectionMatrix();
 }
 
 void Camera::UpdateViewProjectionMatrix()

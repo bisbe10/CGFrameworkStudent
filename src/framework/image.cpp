@@ -342,7 +342,7 @@ void Image::DrawLineDDA(int x0, int y0, int x1, int y1, const Color &c){
     //iterem tantes vegades com a pixels del x0y0 a xy hi hagi
     for(int i = 0; i < d; i++){
         
-        SetPixel(floor(A.x), floor(A.y), c);
+        SetPixelSafe(floor(A.x), floor(A.y), c);
         
         //operator:funció de A que defineix el tipus de clase de "+=" [ aquesta linia suma la direcció i la distancia 1 al nostre vector normalitzat A] així doncs a va guanyant distancia del punt x0 y0 a x y
         A+=(direccio);

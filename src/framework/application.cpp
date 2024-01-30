@@ -50,33 +50,42 @@ void Application::Init(void)
     anna = new Mesh();
     anna->LoadOBJ("meshes/anna.obj");
     
+    cleo = new Mesh();
+    cleo->LoadOBJ("meshes/cleo.obj");
+    
     //MATRIU 1
     //Matrix44(){ setIdentitiy() { Assigna la matriu identitat.
     mtx1=Matrix44();
+    mtx2=Matrix44();
+    mtx2.SetIdentity();
     
     
     //ENTITAT 1
     entity1 = Entity(anna,mtx1);
-    
+    entity2 = Entity(anna,mtx1);
     //CAMERA 1
     
     //DEFINIM UNA CAMERA ->
     
     //CONSTRUCTOR -> view_matrix.SetIdentity();
-    //SetOrthographic(-1,1,1,-1,-1,1); -> 
     
     cam1= new Camera();
-    
+    //cam2= new Camera();
     //vectors que defineixen la camera
     // Eye hauriem de canvi
-    eye = Vector3(1, 0.5, 0.5);
+    eye = Vector3(0.5, 1, 1);
     cen = Vector3(0.0, 0.0 ,0.0);
     //up esta definit application.h ja que sempre és (0,1,0)
-    
+    eye2 = Vector3(0.5, 1, 2);
+    cen2 = Vector3(0.0, 0.0 ,0.0);
+    //Dins LookAt trobem UpdateViewMatrix() on dincs d'aqeusta hi ha Utilitzem el SetExampleViewMatrix()
     cam1->LookAt(eye, cen, up);
-    
+    //cam2->LookAt(eye2, cen2, up);
     //void Camera::SetPerspective(float fov, float aspect, float near_plane, float far_plane)
     //float aspect; Aspect -> (width/height)
+    
+    
+    // si no ho possem en graus peta
     cam1->SetPerspective(45, (float(framebuffer.width)/framebuffer.height), 0.01, 100.0);
     
     
@@ -139,7 +148,7 @@ void Application::Render(void)
   //                    ------------------PRACTICA 2-----------------
     
     entity1.Render(&framebuffer,cam1, Color::WHITE);
-    
+    entity2.Render(&framebuffer,cam1, Color::BLUE);
     framebuffer.Render();
     
    

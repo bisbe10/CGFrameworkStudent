@@ -16,6 +16,7 @@ class Camera
 
 public:
 
+  //------------------------->  ATRUBTS :
 	// Types of cameras available
 	enum { PERSPECTIVE, ORTHOGRAPHIC }; 
 	char type;
@@ -39,6 +40,7 @@ public:
 	Matrix44 projection_matrix;
 	Matrix44 viewprojection_matrix;
 
+    // --------------------> CONSTRUCTOR 
 	Camera();
 
 	// Setters

@@ -41,8 +41,46 @@ void Application::Init(void)
 {
 	std::cout << "Initiating app..." << std::endl;
     
+    
+    //__________________________________PRACTICA 2_________________________________________________
+    
+    // ---------------------DEFINICIONS DE VARIABLES I INSTANCIES PER LA PRACTICA 2--------------------------
+    
+    //MESH 1
+    anna = new Mesh();
     anna->LoadOBJ("meshes/anna.obj");
     
+    //MATRIU 1
+    //Matrix44(){ setIdentitiy() { Assigna la matriu identitat.
+    mtx1=Matrix44();
+    
+    
+    //ENTITAT 1
+    entity1 = Entity(anna,mtx1);
+    
+    //CAMERA 1
+    
+    //DEFINIM UNA CAMERA ->
+    
+    //CONSTRUCTOR -> view_matrix.SetIdentity();
+    //SetOrthographic(-1,1,1,-1,-1,1); -> 
+    
+    cam1= new Camera();
+    
+    //vectors que defineixen la camera
+    // Eye hauriem de canvi
+    eye = Vector3(1, 0.5, 0.5);
+    cen = Vector3(0.0, 0.0 ,0.0);
+    //up esta definit application.h ja que sempre és (0,1,0)
+    
+    cam1->LookAt(eye, cen, up);
+    
+    //void Camera::SetPerspective(float fov, float aspect, float near_plane, float far_plane)
+    //float aspect; Aspect -> (width/height)
+    cam1->SetPerspective(45, (float(framebuffer.width)/framebuffer.height), 0.01, 100.0);
+    
+    
+
     
     
     
@@ -51,6 +89,13 @@ void Application::Init(void)
     
     
     
+    
+    
+    
+    
+    
+    
+    //__________________________________PRACTICA 1_________________________________________________
 //    ps.Init();
 //
 //    framebuffer.Fill(Color::BLACK);
@@ -77,6 +122,7 @@ void Application::Init(void)
 //    pink.LoadPNG("images/pink.png", false);
 //    green.LoadPNG("images/green.png", false);
 //    groc.LoadPNG("images/groc.png", false);
+    //__________________________________________________________________________________________________
     
 }
 
@@ -92,6 +138,7 @@ void Application::Render(void)
 {
   //                    ------------------PRACTICA 2-----------------
     
+    entity1.Render(&framebuffer,cam1, Color::WHITE);
     
     framebuffer.Render();
     
@@ -418,7 +465,7 @@ void Application::OnMouseButtonUp( SDL_MouseButtonEvent event )
 //            }
 //
 //        }
-                    //FINAL DE OnMouseButtonUp( SDL_MouseButtonEvent event )\\
+                    //FINAL DE OnKeyPressed( SDL_KeyboardEvent event )\\
         
     }
 }

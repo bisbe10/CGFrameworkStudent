@@ -7,13 +7,15 @@
 
 // DEFINICIÓ DE LA CLASE ENTITY _____________________________________________________________________
 class Entity{
-private:
-    Mesh mesh;
+
+public:
+    Mesh *mesh;
     Matrix44 m_matrix;
     
-public:
-    Entity(Mesh mesh,Matrix44 m){
-        this->mesh = mesh;
-        this->m_matrix = m;
-    }
+    Entity();
+    Entity(Mesh* m,Matrix44 mm);
+    Entity(const Entity& e);
+    Entity(Mesh* m);
+    Entity(const char* filename);
+    void Render(Image* framebuffer, Camera* camera, const Color& c);
 };

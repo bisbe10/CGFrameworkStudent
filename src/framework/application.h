@@ -138,23 +138,27 @@ public:
     
     // ---------------------DEFINICIONS DE VARIABLES I INSTANCIES PER LA PRACTICA 2--------------------------
     
-    //                                                //MESHES \\
-    Mesh *anna;
+    //                                               // MESHES \\
     
+    Mesh* anna; // PUNTER ??
     
-    
-    //                                                //MATRIX \\
+    //                                               // MATRIX \\
 
     //les matrius estan definides a framework.h
-    //Matrix44
+    Matrix44 mtx1;
+    //Exemples
     
+    //                                              // ENTITIES \\
     
-    //                                                //ENTITIES \\
-    //Entity* entity1 = new Entity(anna_m,
+    Entity entity1;
     
+    //                                               // CAMERAS\\
     
+    Camera* cam1; // PUNTER ?? 
     
-    
+    Vector3 eye;
+    Vector3 cen;
+    Vector3 up = Vector3(0.0, 1.0, 0.0) ;
     
     
     

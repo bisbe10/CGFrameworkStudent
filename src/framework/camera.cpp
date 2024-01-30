@@ -5,6 +5,7 @@
 
 Camera::Camera()
 {
+    
 	view_matrix.SetIdentity();
 	SetOrthographic(-1,1,1,-1,-1,1);
 }
@@ -21,8 +22,15 @@ Vector3 Camera::GetLocalVector(const Vector3& v)
 Vector3 Camera::ProjectVector(Vector3 pos, bool& negZ)
 {
 	Vector4 pos4 = Vector4(pos.x, pos.y, pos.z, 1.0);
+    
+    // la viewprojection_matrix surt d'una cadena de funcions desde el constructor a UpdateViewProjectionMatrix(){ -> viewprojection_matrix = view_matrix * }
+    
 	Vector4 result = viewprojection_matrix * pos4;
+    
+    //-> passem el vector a clip space
+    // si z=1  /z ha estat definit anteriorment = negZ = negatiu = ENS VA DE LOCOS !
 	negZ = result.z < 0;
+    
 	if (type == ORTHOGRAPHIC)
 		return result.GetVector3();
 	else
@@ -46,6 +54,7 @@ void Camera::Move(Vector3 delta)
 	UpdateViewMatrix();
 }
 
+// El constructor  de camera entra SetOrthographic(-1,1,1,-1,-1,1);
 void Camera::SetOrthographic(float left, float right, float top, float bottom, float near_plane, float far_plane)
 {
 	type = ORTHOGRAPHIC;
@@ -111,6 +120,8 @@ void Camera::UpdateProjectionMatrix()
 	// Comment this line to create your own projection matrix!
 	SetExampleProjectionMatrix();
 
+    
+    // FER NOSALTRES MÉS ENDAVANT
 	// Remember how to fill a Matrix4x4 (check framework slides)
 	
 	if (type == PERSPECTIVE) {
@@ -148,6 +159,7 @@ void Camera::SetExampleViewMatrix()
 	glGetFloatv(GL_MODELVIEW_MATRIX, view_matrix.m );
 }
 
+//constructor set el type a Ortho
 void Camera::SetExampleProjectionMatrix()
 {
 	glMatrixMode(GL_PROJECTION);

@@ -11,11 +11,13 @@
 
 class Mesh
 {
-	std::vector<Vector3> vertices;
-	std::vector<Vector3> normals;
-	std::vector<Vector2> uvs;
 
+    // llista dinamica de vectors de 3
+    std::vector<Vector3> vertices;
+    std::vector<Vector3> normals;
+    std::vector<Vector2> uvs;
 public:
+    
 
 	Mesh();
 	void Clear();

@@ -98,7 +98,7 @@ void Application::Init(void)
     entity3 = Entity(lee,mtx3);
     
     Vector3 axis3 = Vector3(0,1,0);
-    entity3.m_matrix.Translate(-1, -0.5, 0);
+    entity3.m_matrix.Translate(-1, -0.5, 0.5);
     entity3.m_matrix.Rotate(PI/6, axis3);
     
     Scale=Matrix44();
@@ -192,12 +192,16 @@ void Application::Render(void)
     
     if (entity1.inactive==false){
         cam1->LookAt(eye, cen, up);
+        
+        
+        entity3.points=false;
+        entity3.Render(&framebuffer,cam1, Color::RED);
+
         entity1.Render(&framebuffer,cam1, Color::WHITE);
         entity2.points=true;
         entity2.triangles_r=false;
         entity2.Render(&framebuffer,cam1, Color::WHITE);
-        entity3.points=false;
-        entity3.Render(&framebuffer,cam1, Color::RED);
+        
         
     } else{
         framebuffer.Fill(Color::BLACK);
@@ -280,10 +284,10 @@ void Application::Render(void)
 void Application::Update(float seconds_elapsed)
 {
     framebuffer.Fill(Color::BLACK);
-//    ps.Update(seconds_elapsed);
-//    entity1.Update(seconds_elapsed, RP);
-//    entity3.Update(seconds_elapsed, R);
-//    entity2.Update(seconds_elapsed, T);
+
+    entity1.Update(seconds_elapsed, RP);
+    entity3.Update(seconds_elapsed, R);
+    entity2.Update(seconds_elapsed, T);
 }
 
 
@@ -482,7 +486,18 @@ void Application::OnMouseButtonUp( SDL_MouseButtonEvent event )
                
                //el de abaix podria anar a traves (des de darrera)
            }else if(mouse_position.x>window_width*0.4 && mouse_position.x<window_width*0.6){
-               eye= Vector3(0,0,2);
+               //gestió per trasladarnos a traves de les entitats
+               if(avant==true){
+                   eye= Vector3(0,0,2);
+                   avant=false;
+               }else{
+                   
+                   eye=Vector3(0,0,-2);
+                   avant=true;
+               }
+                  
+                  
+                  
                
            //    _               _
            //   |                 |

@@ -165,6 +165,7 @@ public:
     Vector3 eye;
     Vector3 cen;
     Vector3 up = Vector3(0.0, 1.0, 0.0) ;
+    bool avant= true;
     
     
     

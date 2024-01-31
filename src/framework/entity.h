@@ -28,6 +28,7 @@ public:
     
     
     
+    
     Mesh *mesh;
     Matrix44 m_matrix;
     

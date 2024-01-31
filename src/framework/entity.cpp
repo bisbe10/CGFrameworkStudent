@@ -122,6 +122,7 @@ void Entity::Update(float seconds_elapsed, type t){
 
     if (!this->inactive) {
 
+        
         if(t==R){
             Vector3 axis= Vector3(0,1,0);
             m_matrix.Rotate(2*DEG2RAD, axis);
@@ -129,7 +130,7 @@ void Entity::Update(float seconds_elapsed, type t){
             
             //sabent superior +0.7 que el limit dret de la pantalla és 1
         }else if(t==T){
-            printf("%f",m_matrix.M[3][1]);
+
             if (m_matrix.M[3][1]>-0.7 && m_matrix.M[3][1]<-0.6){
                 restar=false;
             }else if (m_matrix.M[3][1]<0.7 && m_matrix.M[3][1]>0.6){

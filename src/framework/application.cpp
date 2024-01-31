@@ -118,7 +118,7 @@ void Application::Init(void)
     //vectors que defineixen la camera
     // Eye hauriem de canvi
     eye = Vector3(0, 0, 2);
-    cen = Vector3(0.0, 0.0 ,0.0);
+    cen= Vector3(0,0,0);
     //up esta definit application.h ja que sempre és (0,1,0)
     
     //Dins LookAt trobem UpdateViewMatrix() on dincs d'aqeusta hi ha Utilitzem el SetExampleViewMatrix()
@@ -190,14 +190,19 @@ void Application::Render(void)
 {
   //                    ------------------PRACTICA 2-----------------
     
-    entity1.Render(&framebuffer,cam1, Color::WHITE);
-    entity2.points=true;
-    entity2.triangles_r=false;
-    entity2.Render(&framebuffer,cam1, Color::WHITE);
-    entity3.points=false;
-    entity3.Render(&framebuffer,cam1, Color::WHITE);
+    if (entity1.inactive==false){
+        cam1->LookAt(eye, cen, up);
+        entity1.Render(&framebuffer,cam1, Color::WHITE);
+        entity2.points=true;
+        entity2.triangles_r=false;
+        entity2.Render(&framebuffer,cam1, Color::WHITE);
+        entity3.points=false;
+        entity3.Render(&framebuffer,cam1, Color::RED);
+        
+    } else{
+        framebuffer.Fill(Color::BLACK);
+    }
     framebuffer.Render();
-    
    
     
     
@@ -276,9 +281,9 @@ void Application::Update(float seconds_elapsed)
 {
     framebuffer.Fill(Color::BLACK);
 //    ps.Update(seconds_elapsed);
-    entity1.Update(seconds_elapsed, RP);
-    entity3.Update(seconds_elapsed, R);
-    entity2.Update(seconds_elapsed, T);
+//    entity1.Update(seconds_elapsed, RP);
+//    entity3.Update(seconds_elapsed, R);
+//    entity2.Update(seconds_elapsed, T);
 }
 
 
@@ -447,9 +452,115 @@ void Application::OnMouseButtonDown( SDL_MouseButtonEvent event )
 void Application::OnMouseButtonUp( SDL_MouseButtonEvent event )
 {
 	if (event.button == SDL_BUTTON_LEFT) {
+        //    _               _
+        //   |                 |
+
+           
+           
+   //        |_///////////////_|
+           
+           if (mouse_position.y>0 && mouse_position.y<window_height*0.2){
+               eye= Vector3(0,-2 ,2);
+        //    _               _
+        //   |/////////////////|
+
+                  
+                  
+   //        |_               _|
+               
+           }else if(mouse_position.y<window_height && mouse_position.y>window_height*0.8){
+               printf("hola");
+               eye= Vector3(0,2,2);
+               
+           //    _               _
+           //   |                 |
+                       ////
+                       ////
+                       ////
+      //        |_               _|
+            
+               
+               //el de abaix podria anar a traves (des de darrera)
+           }else if(mouse_position.x>window_width*0.4 && mouse_position.x<window_width*0.6){
+               eye= Vector3(0,0,2);
+               
+           //    _               _
+           //   |                 |
+               /////////////
+               /////////////
+               /////////////
+      //        |_               _|
+               
+           }else if(mouse_position.x>0 && mouse_position.x<window_width*0.5){
+               eye= Vector3(-2,0 ,2);
+           //    _               _
+           //   |                 |
+                          /////////////
+                          /////////////
+                          /////////////
+          //    |_               _|
+               
+           }else if(mouse_position.x>window_width*0.6 && mouse_position.x<window_width){
+               eye= Vector3(2,0 ,2);
+           }
+       
+        
+
+    } else if (event.button == SDL_BUTTON_RIGHT){
+        
+        // Estem canviant el centre de la camera en relació al lloc on s'apreta de la pantalla definit 5 zones diferent
+        
+     //    _               _
+     //   |                 |
+
         
         
+//        |_///////////////_|
         
+        if (mouse_position.y>0 && mouse_position.y<window_height*0.2){
+            cen= Vector3(0,-0.5 ,0.0);
+     //    _               _
+     //   |/////////////////|
+
+               
+               
+//        |_               _|
+            
+        }else if(mouse_position.y<window_height && mouse_position.y>window_height*0.8){
+            printf("hola");
+            cen= Vector3(0,0.5,0.0);
+            
+        //    _               _
+        //   |                 |
+                    ////
+                    ////
+                    ////
+   //        |_               _|
+            
+        }else if(mouse_position.x>window_width*0.4 && mouse_position.x<window_width*0.6){
+            cen= Vector3(0,0,0.0);
+            
+        //    _               _
+        //   |                 |
+            /////////////
+            /////////////
+            /////////////
+   //        |_               _|
+            
+        }else if(mouse_position.x>0 && mouse_position.x<window_width*0.5){
+            cen= Vector3(-0.5,0 ,0.0);
+        //    _               _
+        //   |                 |
+                       /////////////
+                       /////////////
+                       /////////////
+       //    |_               _|
+            
+        }else if(mouse_position.x>window_width*0.6 && mouse_position.x<window_width){
+            cen= Vector3(0.5,0 ,0.0);
+        }
+    }
+}
         
         
 // __________________________________PRACTICA 1___________________________________________________________
@@ -527,8 +638,8 @@ void Application::OnMouseButtonUp( SDL_MouseButtonEvent event )
 //        }
                     //FINAL DE OnKeyPressed( SDL_KeyboardEvent event )\\
         
-    }
-}
+
+//}
 
 
 

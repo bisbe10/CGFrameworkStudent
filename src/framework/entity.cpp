@@ -14,6 +14,11 @@
 #include "utils.h"
 #include "image.h"
 
+//includes per poder fer servir l'sleep i que la funció esperi
+#include <iostream>
+#include <chrono>
+#include <thread>
+
 #include "entity.h"
 
 
@@ -36,7 +41,7 @@ Entity::Entity(Mesh* m){
 
 
 void Entity::Render(Image* framebuffer, Camera* camera, const Color& c){
-   
+    width_window = framebuffer->width-10;
     // boolea x assegurar-nos de que els punts estiguin dins del rang.
     bool negZ;
     
@@ -53,16 +58,11 @@ void Entity::Render(Image* framebuffer, Camera* camera, const Color& c){
         j = 0;
         negZ = false; // si es fals es pinta (true = fora del rang de la camera )
         
-        
-        
-        
         //iteració per a cada vertex
         while(j < 3 && negZ == false){ // cada vertex
             
             
-            
         // LOCAL SPACE -> WORLD SPACE---------------------------------------------------------------
-            
         //Passem el vertex extret del V_rende de local space a world space, multiplicant-lo per la model matrix.
             V4_render = Vector4(V_render[i+j].x, V_render[i+j].y, V_render[i+j].z, 1.0);
             
@@ -72,10 +72,7 @@ void Entity::Render(Image* framebuffer, Camera* camera, const Color& c){
             Vector3 V3_world = Vector3(V4_world.x, V4_world.y, V4_world.z);
             
             
-            
-            
-            
-            
+        
             
 // WORLD SPACE -> mult view_matrix->  VIEW SPACE -> mult projection_matrix -> CLIP SPACE------------------------
             
@@ -97,7 +94,6 @@ void Entity::Render(Image* framebuffer, Camera* camera, const Color& c){
             
             V_3a[j].set(V_screen.x, V_screen.y);
 
-            
             if(points==true){
                 if(j==2 && negZ==false){
                     framebuffer->SetPixelSafe(V_3a[0].x, V_3a[0].y, Color::RED);
@@ -109,16 +105,100 @@ void Entity::Render(Image* framebuffer, Camera* camera, const Color& c){
             }
         //DIBUEIXEM NOMES ELS VERTEX DE LA MESH
             
-            
            // DIBUEIXEM ELS BORDES (I CONSEGÜENTMENT ELS VERTEX) DE LA MESH
             if(j==2 && negZ==false &&triangles_r==true){
-                framebuffer->DrawLineDDA(V_3a[0].x+10, V_3a[0].y+10, V_3a[1].x+10,V_3a[1].y+10,c);
-                framebuffer->DrawLineDDA(V_3a[1].x+10, V_3a[1].y+10, V_3a[2].x+10,V_3a[2].y+10,c);
-                framebuffer->DrawLineDDA(V_3a[2].x+10, V_3a[2].y+10, V_3a[0].x+10,V_3a[0].y+10,c);
+                framebuffer->DrawLineDDA(V_3a[0].x, V_3a[0].y, V_3a[1].x,V_3a[1].y,c);
+                framebuffer->DrawLineDDA(V_3a[1].x, V_3a[1].y, V_3a[2].x,V_3a[2].y,c);
+                framebuffer->DrawLineDDA(V_3a[2].x, V_3a[2].y, V_3a[0].x,V_3a[0].y,c);
             }
-                        
             j=j+1;
         }
+        }
+    
+
+}
+    
+void Entity::Update(float seconds_elapsed, type t){
+
+    if (!this->inactive) {
+
+        if(t==R){
+            Vector3 axis= Vector3(0,1,0);
+            m_matrix.Rotate(2*DEG2RAD, axis);
+            ttl -= seconds_elapsed;
+            
+            //sabent superior +0.7 que el limit dret de la pantalla és 1
+        }else if(t==T){
+            printf("%f",m_matrix.M[3][1]);
+            if (m_matrix.M[3][1]>-0.7 && m_matrix.M[3][1]<-0.6){
+                restar=false;
+            }else if (m_matrix.M[3][1]<0.7 && m_matrix.M[3][1]>0.6){
+                restar=true;
+            }
+            
+            if (restar){
+                m_matrix.Translate(0,-0.05,0);
+            }else{
+                m_matrix.Translate(0,+0.05,0);
+            }
+
+            ttl -= seconds_elapsed;
+            
+        }else if(t==P){
+            if (parell==true){
+                points=false;
+                parell=false;
+                triangles_r=true;
+                std::this_thread::sleep_for(std::chrono::milliseconds(80));
+
+            }else{
+                points=true;
+                parell=true;
+                triangles_r=false;
+                std::this_thread::sleep_for(std::chrono::seconds(1));
+//                std::this_thread::sleep_for(std::chrono::seconds(0));
+            }
+            
+            ttl -= seconds_elapsed;
+        }else if(t==RP){
+            Vector3 axis= Vector3(0,1,0);
+            if (parell==true){
+                points=false;
+                parell=false;
+                triangles_r=true;
+                std::this_thread::sleep_for(std::chrono::milliseconds(80));
+                m_matrix.Rotate(25*DEG2RAD, axis);
+                ttl -= seconds_elapsed;
+            }else{
+                points=true;
+                parell=true;
+                triangles_r=false;
+                std::this_thread::sleep_for(std::chrono::milliseconds(80));
+                m_matrix.Rotate(25*DEG2RAD, axis);
+                ttl -= seconds_elapsed;
+            }
+            
+    
+        }else{
+            std::cout << "El tipus seleccionat no existeix" << std::endl;
+        }
+        
+        
+        
+        //this->ttl -= seconds_elapsed;
+        // mirem si la particula ha finalitzat la seva vida útil
+        if (this->ttl <= 0.0) {
+            this->inactive = true;
+        }
+    
+    
+    
+    
+    
     }
 }
+    
+    
+    
+
 

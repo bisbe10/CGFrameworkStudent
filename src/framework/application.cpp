@@ -42,27 +42,71 @@ void Application::Init(void)
 	std::cout << "Initiating app..." << std::endl;
     
     
+    
+    
     //__________________________________PRACTICA 2_________________________________________________
     
     // ---------------------DEFINICIONS DE VARIABLES I INSTANCIES PER LA PRACTICA 2--------------------------
     
-    //MESH 1
+    //MESH
     anna = new Mesh();
     anna->LoadOBJ("meshes/anna.obj");
     
     cleo = new Mesh();
     cleo->LoadOBJ("meshes/cleo.obj");
     
-    //MATRIU 1
+    lee = new Mesh();
+    lee->LoadOBJ("meshes/lee.obj");
+    
+    //MATRIU
     //Matrix44(){ setIdentitiy() { Assigna la matriu identitat.
     mtx1=Matrix44();
+    //Creem una model matrix 2
     mtx2=Matrix44();
     mtx2.SetIdentity();
     
+    mtx3=Matrix44();
+    mtx3.SetIdentity();
+   
     
     //ENTITAT 1
-    entity1 = Entity(anna,mtx1);
-    entity2 = Entity(anna,mtx1);
+    entity1 = Entity(anna);
+    
+    entity1.m_matrix.Translate(0, -0.3, 0.5);
+    Scale=Matrix44();
+    Scale.M[0][0]=2;
+    Scale.M[1][1]=2;
+    Scale.M[2][2]=2;
+    entity1.m_matrix = Scale * entity1.m_matrix;
+    
+    //ENTITAT 2 + formació de la mtx2;
+    entity2 = Entity(cleo,mtx2);
+    
+    // els vectors axis defineixen l'eix sobre el qual giren les diferents meshes (els signes estan contraris)
+    //modifiquem la mtx2
+    Vector3 axis2 = Vector3(0,0.5,0);
+    //nomes valors de -1 a 1
+    entity2.m_matrix.Translate(1, -0.5, 0);
+    entity2.m_matrix.Rotate(PI/6, axis2);
+
+    Scale=Matrix44();
+    Scale.M[0][0]=0.9;
+    Scale.M[1][1]=0.9;
+    Scale.M[2][2]=0.9;
+    entity2.m_matrix = Scale * entity2.m_matrix;
+    //ENTITAT 3 + formació de la mtx3;
+    entity3 = Entity(lee,mtx3);
+    
+    Vector3 axis3 = Vector3(0,1,0);
+    entity3.m_matrix.Translate(-1, -0.5, 0);
+    entity3.m_matrix.Rotate(PI/6, axis3);
+    
+    Scale=Matrix44();
+    Scale.M[0][0]=1.2;
+    Scale.M[1][1]=1.2;
+    Scale.M[2][2]=1.2;
+    entity3.m_matrix = Scale * entity3.m_matrix;
+    
     //CAMERA 1
     
     //DEFINIM UNA CAMERA ->
@@ -73,14 +117,13 @@ void Application::Init(void)
     //cam2= new Camera();
     //vectors que defineixen la camera
     // Eye hauriem de canvi
-    eye = Vector3(0.5, 1, 1);
+    eye = Vector3(0, 0, 2);
     cen = Vector3(0.0, 0.0 ,0.0);
     //up esta definit application.h ja que sempre és (0,1,0)
-    eye2 = Vector3(0.5, 1, 2);
-    cen2 = Vector3(0.0, 0.0 ,0.0);
+    
     //Dins LookAt trobem UpdateViewMatrix() on dincs d'aqeusta hi ha Utilitzem el SetExampleViewMatrix()
     cam1->LookAt(eye, cen, up);
-    //cam2->LookAt(eye2, cen2, up);
+
     //void Camera::SetPerspective(float fov, float aspect, float near_plane, float far_plane)
     //float aspect; Aspect -> (width/height)
     
@@ -148,7 +191,11 @@ void Application::Render(void)
   //                    ------------------PRACTICA 2-----------------
     
     entity1.Render(&framebuffer,cam1, Color::WHITE);
-    entity2.Render(&framebuffer,cam1, Color::BLUE);
+    entity2.points=true;
+    entity2.triangles_r=false;
+    entity2.Render(&framebuffer,cam1, Color::WHITE);
+    entity3.points=false;
+    entity3.Render(&framebuffer,cam1, Color::WHITE);
     framebuffer.Render();
     
    
@@ -227,7 +274,11 @@ void Application::Render(void)
 // Called after render
 void Application::Update(float seconds_elapsed)
 {
+    framebuffer.Fill(Color::BLACK);
 //    ps.Update(seconds_elapsed);
+    entity1.Update(seconds_elapsed, RP);
+    entity3.Update(seconds_elapsed, R);
+    entity2.Update(seconds_elapsed, T);
 }
 
 

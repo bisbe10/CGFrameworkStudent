@@ -143,26 +143,29 @@ public:
     
     Mesh* anna;
     Mesh* cleo;
+    Mesh* lee;
     //                                               // MATRIX \\
     //les matrius estan definides a framework.h
     Matrix44 mtx1;
     Matrix44 mtx2;
+    Matrix44 mtx3;
+    Matrix44 Scale;
     //Exemples
     
     //                                              // ENTITIES \\
     
     Entity entity1;
     Entity entity2;
+    Entity entity3;
     //                                               // CAMERAS\\
     
     Camera* cam1; 
-    Camera* cam2;
+
     
     Vector3 eye;
     Vector3 cen;
-    Vector3 eye2;
-    Vector3 cen2;
     Vector3 up = Vector3(0.0, 1.0, 0.0) ;
+    
     
     
     

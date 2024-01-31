@@ -6,11 +6,28 @@
 #include "mesh.h"
 
 // DEFINICIÓ DE LA CLASE ENTITY _____________________________________________________________________
+
+enum type{R,T,S,P,RP};
+
+
+
+
+
 class Entity{
-    bool points=true;
-    bool triangles_r=true;
 
 public:
+    //Variable per a una animació
+    bool parell=true;
+    bool points=true;
+    bool triangles_r=true;
+    float ttl=30; //temps de vida estatic
+    bool inactive=false; //activitat de l'animació
+    float width_window;
+    bool restar =true;
+    
+    
+    
+    
     Mesh *mesh;
     Matrix44 m_matrix;
     
@@ -18,31 +35,6 @@ public:
     Entity(Mesh* m,Matrix44 mm);
     Entity(Mesh* m);
     void Render(Image* framebuffer, Camera* camera, const Color& c);
+    void Update(float seconds_elapsed, type t);//afegim tipo t per determinar el tipus de moviment
 };
-//PARTICULES:
-//___________________________PRACTICA 1 DEF CLASES (FORA DEF  D'IMAGE)__________________________________________
-
-
-// DEFINICIÓ DE LA CLASE Particlesystem _________________________________________________________
-
-//class ParticleSystem {
-//
-//        static const int MAX_PARTICLES = 970;
-//
-//        struct Particle {
-//                Vector2 position;
-//                Vector2 velocity; // Normalized speed and direction of the particle
-//                Color color;
-//                float acceleration;
-//                float ttl; // Time left until the particle expires
-//                bool inactive; // Particle is not used/expired, so it can be recreated
-//        };
-//
-//        Particle particles[MAX_PARTICLES];
-//
-//public:
-//        void Init();//inicialitza
-//        void Render(Image* framebuffer);//imprimeix per pantalla
-//        void Update(float dt);//actualitza
-//};
 

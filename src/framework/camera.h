@@ -67,6 +67,7 @@ public:
 	void UpdateViewMatrix();
 	void UpdateProjectionMatrix();
 	void UpdateViewProjectionMatrix();
+    void orbit(float angle_in_rad, const Vector3& axis);
 
 	Matrix44 GetViewProjectionMatrix();
     

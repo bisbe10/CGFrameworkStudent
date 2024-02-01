@@ -131,7 +131,7 @@ void Entity::Update(float seconds_elapsed, type t){
         if(t==R){
             Vector3 axis= Vector3(0,1,0);
             m_matrix.Rotate(2*DEG2RAD, axis);
-            ttl -= seconds_elapsed;
+            
             
             //sabent superior +0.7 que el limit dret de la pantalla és 1
         }else if(t==T){
@@ -148,7 +148,7 @@ void Entity::Update(float seconds_elapsed, type t){
                 m_matrix.Translate(0,+0.05,0);
             }
 
-            ttl -= seconds_elapsed;
+           
             
         }else if(t==P){
             if (parell==true){
@@ -174,14 +174,14 @@ void Entity::Update(float seconds_elapsed, type t){
                 triangles_r=true;
                 std::this_thread::sleep_for(std::chrono::milliseconds(80));
                 m_matrix.Rotate(25*DEG2RAD, axis);
-                ttl -= seconds_elapsed;
+          
             }else{
                 points=true;
                 parell=true;
                 triangles_r=false;
                 std::this_thread::sleep_for(std::chrono::milliseconds(80));
                 m_matrix.Rotate(25*DEG2RAD, axis);
-                ttl -= seconds_elapsed;
+
             }
             
     
@@ -189,13 +189,6 @@ void Entity::Update(float seconds_elapsed, type t){
             std::cout << "El tipus seleccionat no existeix" << std::endl;
         }
         
-        
-        
-        //this->ttl -= seconds_elapsed;
-        // mirem si la particula ha finalitzat la seva vida útil
-        if (this->ttl <= 0.0) {
-            this->inactive = true;
-        }
     
     
     

@@ -165,12 +165,12 @@ void Application::Render(void)
         }
     
         if(Exercici_1){
-            cam1->LookAt(eye, cen, up);
+            //cam1->LookAt(eye, cen, up);
             entity1.Render(&framebuffer,cam1, Color::WHITE);
 
         }else if(Exercici_2){
 
-            cam1->LookAt(eye, cen, up);
+            //cam1->LookAt(eye, cen, up);
         
         
             entity3.points=false;
@@ -226,8 +226,7 @@ void Application::OnKeyPressed( SDL_KeyboardEvent event )
             Persp_4 = false;
             Near_5 = false;
             Far_6 = false;
-            MASF = false;
-            MENOSF = false;
+
             break;
 //
 //            //EX 2- DRAW + d'1 ENTITAT (ANIMADES)
@@ -239,8 +238,7 @@ void Application::OnKeyPressed( SDL_KeyboardEvent event )
             Persp_4 = false;
             Near_5 = false;
             Far_6 = false;
-            MASF = false;
-            MENOSF = false;
+
             break;
 //
 //            //EX 3- CAMERA ORTHO
@@ -261,27 +259,41 @@ void Application::OnKeyPressed( SDL_KeyboardEvent event )
         case SDLK_n:
             //framebuffer.Fill(Color::BLACK);
             Persp_4 = true;
-            this->near += 10.0;
+            Near_5 = true;
+            Far_6 = false;
+            
             break;
             
 //            //EX 6- FAR
         case SDLK_f:
             //framebuffer.Fill(Color::BLACK);
             Persp_4 = true;
-            this->far += 10.0;
+            Near_5 = false;
+            Far_6 = true;
             break;
 
 //            //FUNCIÓ (+) CURRENT PROPERTY
         case SDLK_PLUS:
-            framebuffer.Fill(Color::BLACK);
+            
+            if(Near_5==true){
+                this->near += 0.1;
+            }else if (Far_6==true){
+                this->far += 0.1;
+            }
+
 
             break;
 //
 //           //FUNCIÓ (-)CURRENT PROPERTY
         case SDLK_MINUS:
-            framebuffer.Fill(Color::BLACK);
+            
+            if(Near_5==true){
+                this->near -= 0.1;
+            }else if (Far_6==true){
+                this->far -= 0.1;
+            }
 
-           
+            break;
             
                 //FINAL DE OnKeyPressed( SDL_KeyboardEvent event )\\
             
@@ -302,137 +314,141 @@ void Application::OnMouseButtonDown( SDL_MouseButtonEvent event )
 
 void Application::OnMouseButtonUp( SDL_MouseButtonEvent event )
 {
+    
 	if (event.button == SDL_BUTTON_LEFT) {
-        
-        
-        //CONFIGUREM PANTALLA BAIX
-        //    _               _
-        //   |                 |
-
-           
-           
-   //        |_///////////////_|
-           
-           if (mouse_position.y>0 && mouse_position.y<window_height*0.2){
-               eye= Vector3(0,-2 ,2);
-               
-               //CONFIGUREM PANTALLA DALT
-        //    _               _
-        //   |/////////////////|
-
-                  
-                  
-   //        |_               _|
-               
-           }else if(mouse_position.y<window_height && mouse_position.y>window_height*0.8){
-               printf("hola");
-               eye= Vector3(0,2,2);
-               
-               
-               //CONFIGUREM PANTALLA MITG
-           //    _               _
-           //   |                 |
-                       ////
-                       ////
-                       ////
-      //        |_               _|
-            
-               
-               //el de abaix podria anar a traves (des de darrera)
-           }else if(mouse_position.x>window_width*0.4 && mouse_position.x<window_width*0.6){
-               //gestió per trasladarnos a traves de les entitats
-               if(avant==true){
-                   eye= Vector3(0,0,2);
-                   avant=false;
-               }else{
-                   
-                   eye=Vector3(0,0,-2);
-                   avant=true;
-               }
-                  
-                  
-               //CONFIGUREM PANTALLA ESQ
-               
-           //    _               _
-           //   |                 |
-               /////////////
-               /////////////
-               /////////////
-      //        |_               _|
-               
-           }else if(mouse_position.x>0 && mouse_position.x<window_width*0.5){
-               eye= Vector3(-2,0 ,2);
-               
-               
-               
-               //CONFIGUREM PANTALLA DRETA
-           //    _               _
-           //   |                 |
-                          /////////////
-                          /////////////
-                          /////////////
-          //    |_               _|
-               
-           }else if(mouse_position.x>window_width*0.6 && mouse_position.x<window_width){
-               eye= Vector3(2,0 ,2);
-           }
-       
-        
+        dreta=false;
+//
+//
+//        //CONFIGUREM PANTALLA BAIX
+//        //    _               _
+//        //   |                 |
+//
+//
+//
+//   //        |_///////////////_|
+//
+//           if (mouse_position.y>0 && mouse_position.y<window_height*0.2){
+//               eye= Vector3(0,-2 ,2);
+//
+//               //CONFIGUREM PANTALLA DALT
+//        //    _               _
+//        //   |/////////////////|
+//
+//
+//
+//   //        |_               _|
+//
+//           }else if(mouse_position.y<window_height && mouse_position.y>window_height*0.8){
+//               printf("hola");
+//               eye= Vector3(0,2,2);
+//
+//
+//               //CONFIGUREM PANTALLA MITG
+//           //    _               _
+//           //   |                 |
+//                       ////
+//                       ////
+//                       ////
+//      //        |_               _|
+//
+//
+//               //el de abaix podria anar a traves (des de darrera)
+//           }else if(mouse_position.x>window_width*0.4 && mouse_position.x<window_width*0.6){
+//               //gestió per trasladarnos a traves de les entitats
+//               if(avant==true){
+//                   eye= Vector3(0,0,2);
+//                   avant=false;
+//               }else{
+//
+//                   eye=Vector3(0,0,-2);
+//                   avant=true;
+//               }
+//
+//
+//               //CONFIGUREM PANTALLA ESQ
+//
+//           //    _               _
+//           //   |                 |
+//               /////////////
+//               /////////////
+//               /////////////
+//      //        |_               _|
+//
+//           }else if(mouse_position.x>0 && mouse_position.x<window_width*0.5){
+//               eye= Vector3(-2,0 ,2);
+//
+//
+//
+//               //CONFIGUREM PANTALLA DRETA
+//           //    _               _
+//           //   |                 |
+//                          /////////////
+//                          /////////////
+//                          /////////////
+//          //    |_               _|
+//
+//           }else if(mouse_position.x>window_width*0.6 && mouse_position.x<window_width){
+//               eye= Vector3(2,0 ,2);
+//           }
+//
+//
 
     } else if (event.button == SDL_BUTTON_RIGHT){
+        printf("hola dreta");
+        dreta=true;
         
-        // Estem canviant el centre de la camera en relació al lloc on s'apreta de la pantalla definit 5 zones diferent
-        
-     //    _               _
-     //   |                 |
-
-        
-        
-//        |_///////////////_|
-        
-        if (mouse_position.y>0 && mouse_position.y<window_height*0.2){
-            cen= Vector3(0,-0.5 ,0.0);
-     //    _               _
-     //   |/////////////////|
-
-               
-               
-//        |_               _|
-            
-        }else if(mouse_position.y<window_height && mouse_position.y>window_height*0.8){
-
-            cen= Vector3(0,0.5,0.0);
-            
-        //    _               _
-        //   |                 |
-                    ////
-                    ////
-                    ////
-   //        |_               _|
-            
-        }else if(mouse_position.x>window_width*0.4 && mouse_position.x<window_width*0.6){
-            cen= Vector3(0,0,0.0);
-            
-        //    _               _
-        //   |                 |
-            /////////////
-            /////////////
-            /////////////
-   //        |_               _|
-            
-        }else if(mouse_position.x>0 && mouse_position.x<window_width*0.5){
-            cen= Vector3(-0.5,0 ,0.0);
-        //    _               _
-        //   |                 |
-                       /////////////
-                       /////////////
-                       /////////////
-       //    |_               _|
-            
-        }else if(mouse_position.x>window_width*0.6 && mouse_position.x<window_width){
-            cen= Vector3(0.5,0 ,0.0);
-        }
-    }
+//        // Estem canviant el centre de la camera en relació al lloc on s'apreta de la pantalla definit 5 zones diferent
+//
+//     //    _               _
+//     //   |                 |
+//
+//
+//
+////        |_///////////////_|
+//
+//        if (mouse_position.y>0 && mouse_position.y<window_height*0.2){
+//            cen= Vector3(0,-0.5 ,0.0);
+//     //    _               _
+//     //   |/////////////////|
+//
+//
+//
+////        |_               _|
+//
+//        }else if(mouse_position.y<window_height && mouse_position.y>window_height*0.8){
+//
+//            cen= Vector3(0,0.5,0.0);
+//
+//        //    _               _
+//        //   |                 |
+//                    ////
+//                    ////
+//                    ////
+//   //        |_               _|
+//
+//        }else if(mouse_position.x>window_width*0.4 && mouse_position.x<window_width*0.6){
+//            cen= Vector3(0,0,0.0);
+//
+//        //    _               _
+//        //   |                 |
+//            /////////////
+//            /////////////
+//            /////////////
+//   //        |_               _|
+//
+//        }else if(mouse_position.x>0 && mouse_position.x<window_width*0.5){
+//            cen= Vector3(-0.5,0 ,0.0);
+//        //    _               _
+//        //   |                 |
+//                       /////////////
+//                       /////////////
+//                       /////////////
+//       //    |_               _|
+//
+//        }else if(mouse_position.x>window_width*0.6 && mouse_position.x<window_width){
+//            cen= Vector3(0.5,0 ,0.0);
+//        }
+   }
 }
         
         
@@ -444,7 +460,24 @@ void Application::OnMouseButtonUp( SDL_MouseButtonEvent event )
 
 void Application::OnMouseMove(SDL_MouseButtonEvent event)
 {
-	
+    if (dreta==true){
+        printf("hola dreta");
+        
+         cam1->Rotate(mouse_delta.x*0.01,up);
+
+         cam1->Rotate(mouse_delta.y*0.01,Vector3(1,0,0));
+        
+     } else if (event.button == SDL_BUTTON_LEFT) {
+
+        printf("hola esq");
+         
+        cam1->orbit(mouse_delta.x*0.01,up);
+
+        cam1->orbit(mouse_delta.y*0.01,Vector3(1,0,0));
+        
+    }
+    
+   
 }
 
 void Application::OnWheel(SDL_MouseWheelEvent event)

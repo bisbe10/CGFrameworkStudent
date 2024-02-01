@@ -30,6 +30,11 @@ Entity::Entity(Mesh* m,Matrix44 mm){
         this->m_matrix=mm;
         
 }
+Entity::Entity(Entity& e){
+        this->mesh=e.mesh;
+        this->m_matrix=e.m_matrix;
+        
+}
 
 Entity::Entity(Mesh* m){
         this->mesh = m;

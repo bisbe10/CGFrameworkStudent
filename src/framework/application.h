@@ -138,6 +138,14 @@ public:
     
     // ---------------------DEFINICIONS DE VARIABLES I INSTANCIES PER LA PRACTICA 2--------------------------
     
+    bool Exercici_1 = false;
+    bool Exercici_2 = false;
+    bool Ortho_3 = false;
+    bool Persp_4 = false;
+    bool Near_5 = false;
+    bool Far_6 = false;
+    bool MASF = false;
+    bool MENOSF = false;
     
     //                                               // MESHES \\
     
@@ -159,8 +167,10 @@ public:
     Entity entity3;
     //                                               // CAMERAS\\
     
-    Camera* cam1; 
-
+    Camera* cam1;
+    
+    float near =0.0;
+    float far =0.0;
     
     Vector3 eye;
     Vector3 cen;

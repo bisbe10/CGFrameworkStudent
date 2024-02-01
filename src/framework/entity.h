@@ -32,9 +32,12 @@ public:
     Mesh *mesh;
     Matrix44 m_matrix;
     
+    //DIF CONSTRUCTORS
     Entity();
     Entity(Mesh* m,Matrix44 mm);
+    Entity(Entity& e);
     Entity(Mesh* m);
+    
     void Render(Image* framebuffer, Camera* camera, const Color& c);
     void Update(float seconds_elapsed, type t);//afegim tipo t per determinar el tipus de moviment
 };

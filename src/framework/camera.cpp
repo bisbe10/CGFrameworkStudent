@@ -1,5 +1,5 @@
 #include "camera.h"
-
+#include "application.h"
 #include "main/includes.h"
 #include <iostream>
 

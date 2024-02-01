@@ -69,4 +69,7 @@ public:
 	void UpdateViewProjectionMatrix();
 
 	Matrix44 GetViewProjectionMatrix();
+    
+    float near=0.1;
+    float far=0.1;
 };

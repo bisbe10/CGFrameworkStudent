@@ -20,7 +20,6 @@ public:
     bool parell=true;
     bool points=true;
     bool triangles_r=true;
-    float ttl=30; //temps de vida estatic
     bool inactive=false; //activitat de l'animació
     float width_window;
     bool restar =true;

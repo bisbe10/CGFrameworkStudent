@@ -161,11 +161,11 @@ void Entity::Update(float seconds_elapsed, type t){
                 points=true;
                 parell=true;
                 triangles_r=false;
-                std::this_thread::sleep_for(std::chrono::seconds(1));
-//                std::this_thread::sleep_for(std::chrono::seconds(0));
+                std::this_thread::sleep_for(std::chrono::milliseconds(80));
+
             }
             
-            ttl -= seconds_elapsed;
+
         }else if(t==RP){
             Vector3 axis= Vector3(0,1,0);
             if (parell==true){

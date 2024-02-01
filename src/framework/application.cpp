@@ -129,7 +129,7 @@ void Application::Init(void)
     cam1->LookAt(eye, cen, up);
     
     // Si no ho possem en graus peta
-        cam1->SetPerspective(45, (float(framebuffer.width)/framebuffer.height), 0.01, 100.0);
+        cam1->SetPerspective(fov, (float(framebuffer.width)/framebuffer.height), 0.01, 2);
 
 
 }
@@ -150,22 +150,18 @@ void Application::Render(void)
     
         if(Persp_4){
        
-            cam1->SetPerspective(45, (float(framebuffer.width)/framebuffer.height), 0.01+near-far, 100.0+far-near);
-            printf("near %f,far %f",0.01+near, 100.0-far );
+            cam1->SetPerspective(fov, (float(framebuffer.width)/framebuffer.height), 0.001+near, 2+far);
         }
         else if(Ortho_3){
             
             cam1->SetOrthographic(-1,1,1,-1,-1,1);
         }
-        else if(MASF){
-    
-    
-        }else if(MENOSF){
-      
-        }
+     
     
         if(Exercici_1){
             //cam1->LookAt(eye, cen, up);
+            
+            entity1.triangles_r=true;
             entity1.Render(&framebuffer,cam1, Color::WHITE);
 
         }else if(Exercici_2){
@@ -226,6 +222,7 @@ void Application::OnKeyPressed( SDL_KeyboardEvent event )
             Persp_4 = false;
             Near_5 = false;
             Far_6 = false;
+            Fov_7 = false;
 
             break;
 //
@@ -238,6 +235,7 @@ void Application::OnKeyPressed( SDL_KeyboardEvent event )
             Persp_4 = false;
             Near_5 = false;
             Far_6 = false;
+            Fov_7 = false;
 
             break;
 //
@@ -253,32 +251,46 @@ void Application::OnKeyPressed( SDL_KeyboardEvent event )
             Ortho_3 = false;
             Near_5 = false;
             Far_6 = false;
+            Fov_7 = false;
             break;
 //
 //            //EX 5- NEAR
         case SDLK_n:
-            //framebuffer.Fill(Color::BLACK);
             Persp_4 = true;
             Near_5 = true;
             Far_6 = false;
+            Fov_7 = false;
             
             break;
             
 //            //EX 6- FAR
         case SDLK_f:
-            //framebuffer.Fill(Color::BLACK);
             Persp_4 = true;
             Near_5 = false;
             Far_6 = true;
+            Fov_7 = false;
             break;
 
+            //EX 7- FOV
+              case SDLK_v:
+                  Persp_4 = true;
+                  Near_5 = false;
+                  Far_6 = false;
+                  Fov_7 = true;
+                  
+                  break;
+            
 //            //FUNCIÓ (+) CURRENT PROPERTY
         case SDLK_PLUS:
             
             if(Near_5==true){
                 this->near += 0.1;
+
             }else if (Far_6==true){
                 this->far += 0.1;
+                
+            }else if (Fov_7==true){
+                this->fov += 1;
             }
 
 
@@ -289,8 +301,14 @@ void Application::OnKeyPressed( SDL_KeyboardEvent event )
             
             if(Near_5==true){
                 this->near -= 0.1;
+                
             }else if (Far_6==true){
+
                 this->far -= 0.1;
+
+                
+            }else if (Fov_7==true){
+                this->fov -= 1;
             }
 
             break;
@@ -317,137 +335,12 @@ void Application::OnMouseButtonUp( SDL_MouseButtonEvent event )
     
 	if (event.button == SDL_BUTTON_LEFT) {
         dreta=false;
-//
-//
-//        //CONFIGUREM PANTALLA BAIX
-//        //    _               _
-//        //   |                 |
-//
-//
-//
-//   //        |_///////////////_|
-//
-//           if (mouse_position.y>0 && mouse_position.y<window_height*0.2){
-//               eye= Vector3(0,-2 ,2);
-//
-//               //CONFIGUREM PANTALLA DALT
-//        //    _               _
-//        //   |/////////////////|
-//
-//
-//
-//   //        |_               _|
-//
-//           }else if(mouse_position.y<window_height && mouse_position.y>window_height*0.8){
-//               printf("hola");
-//               eye= Vector3(0,2,2);
-//
-//
-//               //CONFIGUREM PANTALLA MITG
-//           //    _               _
-//           //   |                 |
-//                       ////
-//                       ////
-//                       ////
-//      //        |_               _|
-//
-//
-//               //el de abaix podria anar a traves (des de darrera)
-//           }else if(mouse_position.x>window_width*0.4 && mouse_position.x<window_width*0.6){
-//               //gestió per trasladarnos a traves de les entitats
-//               if(avant==true){
-//                   eye= Vector3(0,0,2);
-//                   avant=false;
-//               }else{
-//
-//                   eye=Vector3(0,0,-2);
-//                   avant=true;
-//               }
-//
-//
-//               //CONFIGUREM PANTALLA ESQ
-//
-//           //    _               _
-//           //   |                 |
-//               /////////////
-//               /////////////
-//               /////////////
-//      //        |_               _|
-//
-//           }else if(mouse_position.x>0 && mouse_position.x<window_width*0.5){
-//               eye= Vector3(-2,0 ,2);
-//
-//
-//
-//               //CONFIGUREM PANTALLA DRETA
-//           //    _               _
-//           //   |                 |
-//                          /////////////
-//                          /////////////
-//                          /////////////
-//          //    |_               _|
-//
-//           }else if(mouse_position.x>window_width*0.6 && mouse_position.x<window_width){
-//               eye= Vector3(2,0 ,2);
-//           }
-//
-//
+
 
     } else if (event.button == SDL_BUTTON_RIGHT){
         printf("hola dreta");
         dreta=true;
         
-//        // Estem canviant el centre de la camera en relació al lloc on s'apreta de la pantalla definit 5 zones diferent
-//
-//     //    _               _
-//     //   |                 |
-//
-//
-//
-////        |_///////////////_|
-//
-//        if (mouse_position.y>0 && mouse_position.y<window_height*0.2){
-//            cen= Vector3(0,-0.5 ,0.0);
-//     //    _               _
-//     //   |/////////////////|
-//
-//
-//
-////        |_               _|
-//
-//        }else if(mouse_position.y<window_height && mouse_position.y>window_height*0.8){
-//
-//            cen= Vector3(0,0.5,0.0);
-//
-//        //    _               _
-//        //   |                 |
-//                    ////
-//                    ////
-//                    ////
-//   //        |_               _|
-//
-//        }else if(mouse_position.x>window_width*0.4 && mouse_position.x<window_width*0.6){
-//            cen= Vector3(0,0,0.0);
-//
-//        //    _               _
-//        //   |                 |
-//            /////////////
-//            /////////////
-//            /////////////
-//   //        |_               _|
-//
-//        }else if(mouse_position.x>0 && mouse_position.x<window_width*0.5){
-//            cen= Vector3(-0.5,0 ,0.0);
-//        //    _               _
-//        //   |                 |
-//                       /////////////
-//                       /////////////
-//                       /////////////
-//       //    |_               _|
-//
-//        }else if(mouse_position.x>window_width*0.6 && mouse_position.x<window_width){
-//            cen= Vector3(0.5,0 ,0.0);
-//        }
    }
 }
         
@@ -461,15 +354,17 @@ void Application::OnMouseButtonUp( SDL_MouseButtonEvent event )
 void Application::OnMouseMove(SDL_MouseButtonEvent event)
 {
     if (dreta==true){
-        printf("hola dreta");
+        
+        //definim l'eix sobre el qual volem rotar (y i x respectivament) i l'angle que volem que el centre es mogui, fent el vector que va de l'eye al center i sumant-li la coordenada mouse_delta.x i .y respectivament
         
          cam1->Rotate(mouse_delta.x*0.01,up);
 
+        
          cam1->Rotate(mouse_delta.y*0.01,Vector3(1,0,0));
         
      } else if (event.button == SDL_BUTTON_LEFT) {
 
-        printf("hola esq");
+         //definim l'eix sobre el qual volem rotar (y i x respectivament) i l'angle que volem que l'eye es mogui, fent el vector que va del center a 'eye' i sumant-li la coordenada mouse_delta.x i .y respectivament
          
         cam1->orbit(mouse_delta.x*0.01,up);
 

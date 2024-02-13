@@ -24,7 +24,8 @@ public:
 	int window_height;
     bool dreta=false;
 	float time;
-
+    
+   
 	// Input
 	const Uint8* keystate;
 	int mouse_state; // Tells which buttons are pressed
@@ -38,9 +39,6 @@ public:
 	void OnWheel(SDL_MouseWheelEvent event);
 	void OnFileChanged(const char* filename);
 
-	// CPU Global framebuffer
-    
-    Image framebuffer;
     
     // Constructor and main methods
     Application(const char* caption, int width, int height);
@@ -64,21 +62,30 @@ public:
         return Vector2(float(w), float(h));
     }
 
+    // CPU Global framebuffer
+    Image framebuffer;
     
+    //                  ------------------PRACTICA 3---------------------------
     
+    //zbuffer
+    FloatImage zbuffer;
+    //textura
+    Image* anna_t;
+    Image* cleo_t;
+    Image* lee_t;
     //                  ------------------PRACTICA 2---------------------------
     
     // ---------------------DEFINICIONS DE VARIABLES I INSTANCIES PER LA PRACTICA 2--------------------------
     
     bool Exercici_1 = false;
-    bool Exercici_2 = false;
-    bool Ortho_3 = false;
-    bool Persp_4 = false;
-    bool Near_5 = false;
-    bool Far_6 = false;
-    bool MASF = false;
-    bool MENOSF = false;
-    bool Fov_7 = false;
+//    bool Exercici_2 = false;
+//    bool Ortho_3 = false;
+//    bool Persp_4 = false;
+//    bool Near_5 = false;
+//    bool Far_6 = false;
+//    bool MASF = false;
+//    bool MENOSF = false;
+//    bool Fov_7 = false;
     
     //                                               // MESHES \\
     

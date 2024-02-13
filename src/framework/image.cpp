@@ -310,9 +310,94 @@ bool Image::SaveTGA(const char* filename)
 	return true;
 }
 
+//------------------------------------PRACTICA 3:-----------------------------------------------------------\\
+
+void Image::DrawTriangleInterpolated(const Vector3& p0, const Vector3& p1, const Vector3& p2, const Color& c0, const Color& c1, const Color& c2,FloatImage* zbuffer, Image * tex, const Vector2 &uv0, const Vector2 &uv1, const Vector2 &uv2){
+    
+    
+    Matrix44 m;
+    m.SetIdentity();
+    Vector2 v0;
+    
+    int puntomax = std::max({ p0.y,p1.y,p2.y }); //busquem el punt d'altura maxima (y max)
+    std::vector<Cell> table(puntomax); //creem taula amb aquell punt com a maxim per no passarsnos
+
+            //actualitzem valors taula
+            ScanLineDDA(p0.x, p0.y, p1.x, p1.y, table);
+            ScanLineDDA(p1.x, p1.y, p2.x, p2.y, table);
+            ScanLineDDA(p2.x, p2.y, p0.x, p0.y, table);
+
+        int puntomin = static_cast<int>(std::min({ p0.y,p1.y,p2.y })); //trobem minim
+    
+    //iterem per a cada una de les cells de la taula
+    for(int i=0; i<table.size(); i++){
+        //comprobem que el minim no sobrepassi el maxim ( comprobació d'errors)
+        
+        if (table[i].min_x < table[i].max_x){
+           
+            //iterem per a cada un dels pixels entre min i max
+        for(int j = table[i].min_x+1; j<=table[i].max_x; j++){
+            
+            
+            //MIRAR SI NECESITEM AIXO
+            //convertim els punts (entrats com a vectors 3 a vectors 2.
+            Vector2 v1 = Vector2(p0.x, p0.y); //vertex p0
+            Vector2 v2 = Vector2(p1.x, p1.y); //vertex p1
+            Vector2 v3 = Vector2(p2.x, p2.y); //vertex p2
+            Vector2 v4 = Vector2(j, i); // el punt que volem pintar
+
+            
+            //RECORDAR QUE PRIMER LA COLUMNA I DESPRES LA FILA
+            //p0.x p0.y 1                    p1.x p1.y 1              p2.x p2.y 1
+            m.M[0][0]=v1.x;             m.M[1][0]=v2.x;         m.M[2][0]=v3.x;
+            m.M[0][1]=v1.y;             m.M[1][1]=v2.y;         m.M[2][1]=v3.y;
+            m.M[0][2]=1;                m.M[1][2]=1;            m.M[2][2]=1;
 
 
+            m.Inverse();
+            Vector3 bCoords = m*Vector3(v4.x,v4.y,1);
+            bCoords.Clamp(0,1);
+            
+            // Normalitzem els pesos (les coordenades bCoords) dividint per la suma
+            float sum = bCoords.x + bCoords.y+ bCoords.z;
+            Color finalColor=(bCoords.x/sum) * c0 +(bCoords.y/sum) * c1 + (bCoords.z/sum) * c2;
+            
+            //tipus 1:
+            
+           //SetPixelSafe(v4.x,v4.y,finalColor);
+            
+            
+            
+            //tipus 2:
+            //3.3 Draw a mesh with occlusions (Z-Buffer) (3 points)
+            //trobem la zi de cada pixel utilitzant els pesos de cada vertex al nostre punt p, multiplicats per la coordinada z de cada vertex
+            const float& zi = (p0.z * (bCoords.x/sum)) + (p1.z * (bCoords.y/sum)) + (p2.z * (bCoords.z/sum));
+            
+//                if ( zi < zbuffer->GetPixel(j,i)){
+//                    SetPixelSafe(j, i, finalColor);
+//                    zbuffer->SetPixel(j, i, zi);
+//
+//                }
+            
+            
+            
+            
+            //tipus 3:
+            Vector2 tex_f = (uv0 * (bCoords.x/sum)) + (uv1 * (bCoords.y/sum)) + (uv2 * (bCoords.z/sum));
 
+            //agafar colo de la textura en el punt que estigui i fer setpixelsafe:
+            if ( zi < zbuffer->GetPixel(j,i)){
+                Color color_t = tex->GetPixelSafe(tex_f.x, tex_f.y);
+                SetPixelSafe(j, i, color_t);
+                zbuffer->SetPixel(j, i, zi);
+
+            }
+        }
+     
+    }
+
+  }
+}
                                     
 //------------------------------------PRACTICA 1:-----------------------------------------------------------\\
 

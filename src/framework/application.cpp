@@ -22,6 +22,9 @@ Application::Application(const char* caption, int width, int height)
 
     //definició del framebuffer
 	this->framebuffer.Resize(w, h);
+    
+    //definició del zbuffer
+    this->zbuffer.Resize(w,h);
 }
 
 
@@ -29,8 +32,6 @@ Application::Application(const char* caption, int width, int height)
 Application::~Application()
 {
     
-    
-    // més codi //SDL_DestroyWindow(window); <- ara mateix aixo esta al main
     
     
 }
@@ -59,6 +60,15 @@ void Application::Init(void)
     lee = new Mesh();
     lee->LoadOBJ("meshes/lee.obj");
     
+    anna_t = new Image();
+    anna_t->LoadTGA("textures/anna_color_specular.tga");
+    
+    lee_t = new Image();
+    lee_t->LoadTGA("textures/lee_color_specular.tga");
+    
+    cleo_t = new Image();
+    cleo_t->LoadTGA("textures/cleo_color_specular.tga");
+    
     
     //MATRIU
     //Matrix44(){ setIdentitiy() { Assigna la matriu identitat.
@@ -72,7 +82,7 @@ void Application::Init(void)
    
     
     //ENTITAT 1
-    entity1 = Entity(anna);
+    entity1 = Entity(anna,anna_t);
     
     entity1.m_matrix.Translate(0, -0.3, 0.5);
     Scale=Matrix44();
@@ -83,7 +93,7 @@ void Application::Init(void)
     
     
     //ENTITAT 2 + formació de la mtx2;
-    entity2 = Entity(cleo,mtx2);
+    entity2 = Entity(cleo,mtx2,cleo_t);
     
     // els vectors axis defineixen l'eix sobre el qual giren les diferents meshes (els signes estan contraris)
     //modifiquem la mtx2
@@ -100,7 +110,7 @@ void Application::Init(void)
    
     
     //ENTITAT 3 + formació de la mtx3;
-    entity3 = Entity(lee,mtx3);
+    entity3 = Entity(lee,mtx3,lee_t);
     
     Vector3 axis3 = Vector3(0,1,0);
     entity3.m_matrix.Translate(-1, -0.5, 0.5);
@@ -159,23 +169,23 @@ void Application::Render(void)
      
     
         if(Exercici_1){
-            //cam1->LookAt(eye, cen, up);
+
             
-            entity1.triangles_r=true;
-            entity1.Render(&framebuffer,cam1, Color::WHITE);
+            entity1.t=TI;
+   
+            entity1.Render(&framebuffer,cam1, Color::WHITE,Color::RED,Color::BLUE,entity1.t, &zbuffer);
 
         }else if(Exercici_2){
 
-            //cam1->LookAt(eye, cen, up);
+
         
         
-            entity3.points=false;
-            entity3.Render(&framebuffer,cam1, Color::RED);
+            entity3.t=TI;
+            entity3.Render(&framebuffer,cam1, Color::RED,Color::WHITE,Color::BLUE,entity3.t, &zbuffer);
         
-            entity1.Render(&framebuffer,cam1, Color::WHITE);
-            entity2.points=true;
-            entity2.triangles_r=false;
-            entity2.Render(&framebuffer,cam1, Color::WHITE);
+            entity1.Render(&framebuffer,cam1, Color::WHITE,Color::RED,Color::BLUE,entity1.t, &zbuffer);
+            entity2.t=TI;
+            entity2.Render(&framebuffer,cam1, Color::WHITE,Color::RED,Color::BLUE,entity2.t, &zbuffer);
             
     }
     
@@ -190,7 +200,7 @@ void Application::Render(void)
 void Application::Update(float seconds_elapsed)
 {
     if (Exercici_2){
-            entity1.Update(seconds_elapsed, RP);
+            entity1.Update(seconds_elapsed, P);
             entity3.Update(seconds_elapsed, R);
             entity2.Update(seconds_elapsed, T);
     }
@@ -338,7 +348,7 @@ void Application::OnMouseButtonUp( SDL_MouseButtonEvent event )
 
 
     } else if (event.button == SDL_BUTTON_RIGHT){
-        printf("hola dreta");
+
         dreta=true;
         
    }

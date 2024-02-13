@@ -161,6 +161,7 @@ void Camera::UpdateProjectionMatrix()
     projection_matrix.M[3][2] = ( 2.0 * far_plane * near_plane) / (near_plane - far_plane);
              projection_matrix.M[3][3] = 0.0;
     }
+    
     //definit al powerpoint de 3D pàgina 26 // definim els atributs right, left... al contructor de camera a la funció 
     else if (type == ORTHOGRAPHIC) {
     projection_matrix.M[0][0] = 2.0 / (right - left);

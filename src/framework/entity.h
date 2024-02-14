@@ -8,7 +8,7 @@
 // DEFINICIÓ DE LA CLASE ENTITY _____________________________________________________________________
 
 enum type{R,T,S,P,RP};
-enum rendertype{PO,WR,TR,TI};
+enum rendertype{PO,WR,TR,TI,TX};
 
 //enum eRenderMode{POINTCLOUD,WIREFRAME,TRIANGLES,TRIANGLES_INTERPOLATED,};
 
@@ -42,7 +42,7 @@ public:
     Entity(Entity& e);
     Entity(Mesh* m);
     
-    void Render(Image* framebuffer, Camera* camera, const Color& c,const Color& fc,const Color& c3, rendertype t,FloatImage* zBuffer);
+    void Render(Image* framebuffer, Camera* camera, const Color& c,const Color& fc,const Color& c3, rendertype t,FloatImage* zBuffer,int tipus);
     void Update(float seconds_elapsed, type t);//afegim tipo t per determinar el tipus de moviment
 };
 

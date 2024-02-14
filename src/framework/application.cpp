@@ -69,6 +69,8 @@ void Application::Init(void)
     cleo_t = new Image();
     cleo_t->LoadTGA("textures/cleo_color_specular.tga");
     
+
+    
     
     //MATRIU
     //Matrix44(){ setIdentitiy() { Assigna la matriu identitat.
@@ -154,40 +156,43 @@ void Application::Init(void)
 
 void Application::Render(void)
 {
-  //                    ------------------PRACTICA 2-----------------
+    this->zbuffer.Fill(10000000.f);
+    framebuffer.Fill(Color::BLACK);
+  //------------------PRACTICA 2-----------------
+        if(C==true){
 
-    
-    
-        if(Persp_4){
-       
-            cam1->SetPerspective(fov, (float(framebuffer.width)/framebuffer.height), 0.001+near, 2+far);
+            
+            entity1.t=TR;
+            tipus=1;
+            entity1.Render(&framebuffer,cam1, Color::WHITE,Color::RED,Color::BLUE,entity1.t, &zbuffer,tipus);
+
+        }else if(C==false&& T==false){
+            if (c==1){
+                if(Z){
+                    tipus=2;
+                    entity1.t=TI;
+                    entity1.Render(&framebuffer,cam1, Color::GREEN,Color::RED,Color::BLUE,entity1.t, &zbuffer, tipus);
+                } else{
+                    
+                    entity1.t=TI;
+                    tipus=1;
+                    entity1.Render(&framebuffer,cam1, Color::GREEN,Color::RED,Color::BLUE,entity1.t, &zbuffer,tipus);
+                }
+            } else if (c==0){
+                entity1.t=TR;
+                tipus=1;
+                entity1.Render(&framebuffer,cam1, Color::WHITE,Color::RED,Color::BLUE,entity1.t, &zbuffer,tipus);
+           
+            } else { // c=-1 (inicialitzem el framebuffer en pantalla negra)
+                framebuffer.Fill(Color::BLACK);
+            }
+            
+        
+        } else if(T==true&&C==false){
+            entity1.t=TX;
+            tipus=3;
+            entity1.Render(&framebuffer,cam1, Color::GREEN,Color::RED,Color::BLUE,entity1.t, &zbuffer, tipus);
         }
-        else if(Ortho_3){
-            
-            cam1->SetOrthographic(-1,1,1,-1,-1,1);
-        }
-     
-    
-        if(Exercici_1){
-
-            
-            entity1.t=TI;
-   
-            entity1.Render(&framebuffer,cam1, Color::WHITE,Color::RED,Color::BLUE,entity1.t, &zbuffer);
-
-        }else if(Exercici_2){
-
-
-        
-        
-            entity3.t=TI;
-            entity3.Render(&framebuffer,cam1, Color::RED,Color::WHITE,Color::BLUE,entity3.t, &zbuffer);
-        
-            entity1.Render(&framebuffer,cam1, Color::WHITE,Color::RED,Color::BLUE,entity1.t, &zbuffer);
-            entity2.t=TI;
-            entity2.Render(&framebuffer,cam1, Color::WHITE,Color::RED,Color::BLUE,entity2.t, &zbuffer);
-            
-    }
     
 
     framebuffer.Render();
@@ -199,11 +204,11 @@ void Application::Render(void)
 // Called after render
 void Application::Update(float seconds_elapsed)
 {
-    if (Exercici_2){
-            entity1.Update(seconds_elapsed, P);
-            entity3.Update(seconds_elapsed, R);
-            entity2.Update(seconds_elapsed, T);
-    }
+//    if (Exercici_2){
+//            entity1.Update(seconds_elapsed, P);
+//            entity3.Update(seconds_elapsed, R);
+//            entity2.Update(seconds_elapsed, T);
+//    }
     framebuffer.Fill(Color::BLACK);
 
 
@@ -223,106 +228,50 @@ void Application::OnKeyPressed( SDL_KeyboardEvent event )
 //                    ------------------PRACTICA 2-----------------
             
             
-//            //EX 1- DRAW 1 ENTITAT
-        case SDLK_1:
+//            //EX 1- Intercalar entre (Plain Color/interpolated)
+        case SDLK_c:
             framebuffer.Fill(Color::BLACK);
-            Exercici_1 = true;
-            Exercici_2 = false;
-            Ortho_3 = false;
-            Persp_4 = false;
-            Near_5 = false;
-            Far_6 = false;
-            Fov_7 = false;
+            c=1;
+            if (parell_c==true){
+                C = true;
+                T= false;
+                parell_c=false;
+            }else{
+                C = false;
+                T= false;
+                parell_c=true;
+            }
+
 
             break;
 //
-//            //EX 2- DRAW + d'1 ENTITAT (ANIMADES)
-        case SDLK_2:
+//            //EX 2- OCCLUSION
+        case SDLK_z:
             framebuffer.Fill(Color::BLACK);
-            Exercici_1 = false;
-            Exercici_2 = true;
-            Ortho_3 = false;
-            Persp_4 = false;
-            Near_5 = false;
-            Far_6 = false;
-            Fov_7 = false;
-
+            if (parell_z==true){
+                Z=true;
+                parell_z=false;
+            }else{
+                Z=false;
+                parell_z=true;
+            }
             break;
 //
 //            //EX 3- CAMERA ORTHO
-        case SDLK_o:
-            Persp_4 = false;
-            Ortho_3 = true;
-            break;
-//
-//            //EX 4- CAMERA PERSPECTIVE
-        case SDLK_p:
-            Persp_4 = true;
-            Ortho_3 = false;
-            Near_5 = false;
-            Far_6 = false;
-            Fov_7 = false;
-            break;
-//
-//            //EX 5- NEAR
-        case SDLK_n:
-            Persp_4 = true;
-            Near_5 = true;
-            Far_6 = false;
-            Fov_7 = false;
-            
-            break;
-            
-//            //EX 6- FAR
-        case SDLK_f:
-            Persp_4 = true;
-            Near_5 = false;
-            Far_6 = true;
-            Fov_7 = false;
-            break;
-
-            //EX 7- FOV
-              case SDLK_v:
-                  Persp_4 = true;
-                  Near_5 = false;
-                  Far_6 = false;
-                  Fov_7 = true;
-                  
-                  break;
-            
-//            //FUNCIÓ (+) CURRENT PROPERTY
-        case SDLK_PLUS:
-            
-            if(Near_5==true){
-                this->near += 0.1;
-
-            }else if (Far_6==true){
-                this->far += 0.1;
-                
-            }else if (Fov_7==true){
-                this->fov += 1;
+        case SDLK_t:
+            c=0;
+            if (parell_t==true){
+                C = false;
+                T= true;
+                parell_t=false;
+            }else{
+                C = false;
+                T= false;
+                parell_t=true;
             }
-
-
             break;
 //
-//           //FUNCIÓ (-)CURRENT PROPERTY
-        case SDLK_MINUS:
-            
-            if(Near_5==true){
-                this->near -= 0.1;
-                
-            }else if (Far_6==true){
 
-                this->far -= 0.1;
-
-                
-            }else if (Fov_7==true){
-                this->fov -= 1;
-            }
-
-            break;
-            
                 //FINAL DE OnKeyPressed( SDL_KeyboardEvent event )\\
             
 	}
@@ -387,9 +336,8 @@ void Application::OnMouseMove(SDL_MouseButtonEvent event)
 
 void Application::OnWheel(SDL_MouseWheelEvent event)
 {
-	float dy = event.preciseY;
-
-	
+    float dy = event.preciseY;
+    cam1->Zoom(dy < 0 ? 1.1 : 0.9);
 }
 
 void Application::OnFileChanged(const char* filename)

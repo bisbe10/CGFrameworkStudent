@@ -190,6 +190,13 @@ Matrix44 Camera::GetViewProjectionMatrix()
 	return viewprojection_matrix;
 }
 
+void Camera::Zoom(float distance)
+{
+    Vector3 new_front = eye - center;
+    eye = center + new_front * distance;
+    UpdateViewMatrix();
+}
+
 // The following methods have been created for testing.
 // Do not modify them.
 

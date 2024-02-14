@@ -77,15 +77,15 @@ public:
     
     // ---------------------DEFINICIONS DE VARIABLES I INSTANCIES PER LA PRACTICA 2--------------------------
     
-    bool Exercici_1 = false;
-//    bool Exercici_2 = false;
-//    bool Ortho_3 = false;
-//    bool Persp_4 = false;
-//    bool Near_5 = false;
-//    bool Far_6 = false;
-//    bool MASF = false;
-//    bool MENOSF = false;
-//    bool Fov_7 = false;
+    bool C= false;
+    bool Z = false;
+    bool T = false;
+    bool parell_c= true;
+    bool parell_z = true;
+    bool parell_t= true;
+    //variable que determina si C= false; T= false; perque hem apretat la tecla T (c==0) o C (c==1) 
+    int c=-1;
+    int tipus=1;
     
     //                                               // MESHES \\
     

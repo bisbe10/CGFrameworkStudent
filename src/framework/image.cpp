@@ -312,88 +312,71 @@ bool Image::SaveTGA(const char* filename)
 
 //------------------------------------PRACTICA 3:-----------------------------------------------------------\\
 
-void Image::DrawTriangleInterpolated(const Vector3& p0, const Vector3& p1, const Vector3& p2, const Color& c0, const Color& c1, const Color& c2,FloatImage* zbuffer, Image * tex, const Vector2 &uv0, const Vector2 &uv1, const Vector2 &uv2){
+void Image::DrawTriangleInterpolated(const Vector3& p0, const Vector3& p1, const Vector3& p2, const Color& c0, const Color& c1, const Color& c2,FloatImage* zbuffer, Image * tex, const Vector2 &uv0, const Vector2 &uv1, const Vector2 &uv2,int tipus){
     
     
     Matrix44 m;
     m.SetIdentity();
-    Vector2 v0;
     
-    int puntomax = std::max({ p0.y,p1.y,p2.y }); //busquem el punt d'altura maxima (y max)
-    std::vector<Cell> table(puntomax); //creem taula amb aquell punt com a maxim per no passarsnos
-
-            //actualitzem valors taula
-            ScanLineDDA(p0.x, p0.y, p1.x, p1.y, table);
-            ScanLineDDA(p1.x, p1.y, p2.x, p2.y, table);
-            ScanLineDDA(p2.x, p2.y, p0.x, p0.y, table);
-
-        int puntomin = static_cast<int>(std::min({ p0.y,p1.y,p2.y })); //trobem minim
+    std::vector<Cell> table(height);
+    //Update table with the min and max x values of the triangle
+    ScanLineDDA(p0.x, p0.y, p1.x, p1.y, table);
+    ScanLineDDA(p1.x, p1.y, p2.x, p2.y, table);
+    ScanLineDDA(p2.x, p2.y, p0.x, p0.y, table);
+    //Paint the triangleaula
     
-    //iterem per a cada una de les cells de la taula
-    for(int i=0; i<table.size(); i++){
-        //comprobem que el minim no sobrepassi el maxim ( comprobació d'errors)
-        
-        if (table[i].min_x < table[i].max_x){
-           
-            //iterem per a cada un dels pixels entre min i max
-        for(int j = table[i].min_x+1; j<=table[i].max_x; j++){
-            
-            
-            //MIRAR SI NECESITEM AIXO
-            //convertim els punts (entrats com a vectors 3 a vectors 2.
-            Vector2 v1 = Vector2(p0.x, p0.y); //vertex p0
-            Vector2 v2 = Vector2(p1.x, p1.y); //vertex p1
-            Vector2 v3 = Vector2(p2.x, p2.y); //vertex p2
+    //RECORDAR QUE PRIMER LA COLUMNA I DESPRES LA FILA
+    //p0.x p0.y 1                p1.x p1.y 1             p2.x p2.y 1
+    m.M[0][0]=p0.x;             m.M[1][0]=p1.x;         m.M[2][0]=p2.x;
+    m.M[0][1]=p0.y;             m.M[1][1]=p1.y;         m.M[2][1]=p2.y;
+    m.M[0][2]=1;                m.M[1][2]=1;            m.M[2][2]=1;
+    
+    m.Inverse();
+    
+    for (int i = 0; i < table.size(); i++) {
+        //Paint each row of the triangle from minx to maxx (included)
+        for (int j = table[i].min_x; j <= table[i].max_x; j++) {
+
             Vector2 v4 = Vector2(j, i); // el punt que volem pintar
 
-            
-            //RECORDAR QUE PRIMER LA COLUMNA I DESPRES LA FILA
-            //p0.x p0.y 1                    p1.x p1.y 1              p2.x p2.y 1
-            m.M[0][0]=v1.x;             m.M[1][0]=v2.x;         m.M[2][0]=v3.x;
-            m.M[0][1]=v1.y;             m.M[1][1]=v2.y;         m.M[2][1]=v3.y;
-            m.M[0][2]=1;                m.M[1][2]=1;            m.M[2][2]=1;
-
-
-            m.Inverse();
             Vector3 bCoords = m*Vector3(v4.x,v4.y,1);
             bCoords.Clamp(0,1);
             
             // Normalitzem els pesos (les coordenades bCoords) dividint per la suma
             float sum = bCoords.x + bCoords.y+ bCoords.z;
-            Color finalColor=(bCoords.x/sum) * c0 +(bCoords.y/sum) * c1 + (bCoords.z/sum) * c2;
+            bCoords= bCoords/sum;
+            Color finalColor=(bCoords.x) * c0 +(bCoords.y) * c1 + (bCoords.z) * c2;
             
             //tipus 1:
             
-           //SetPixelSafe(v4.x,v4.y,finalColor);
-            
-            
-            
-            //tipus 2:
-            //3.3 Draw a mesh with occlusions (Z-Buffer) (3 points)
-            //trobem la zi de cada pixel utilitzant els pesos de cada vertex al nostre punt p, multiplicats per la coordinada z de cada vertex
-            const float& zi = (p0.z * (bCoords.x/sum)) + (p1.z * (bCoords.y/sum)) + (p2.z * (bCoords.z/sum));
-            
-//                if ( zi < zbuffer->GetPixel(j,i)){
-//                    SetPixelSafe(j, i, finalColor);
-//                    zbuffer->SetPixel(j, i, zi);
-//
-//                }
-            
-            
-            
-            
-            //tipus 3:
-            Vector2 tex_f = (uv0 * (bCoords.x/sum)) + (uv1 * (bCoords.y/sum)) + (uv2 * (bCoords.z/sum));
-
-            //agafar colo de la textura en el punt que estigui i fer setpixelsafe:
-            if ( zi < zbuffer->GetPixel(j,i)){
-                Color color_t = tex->GetPixelSafe(tex_f.x, tex_f.y);
-                SetPixelSafe(j, i, color_t);
-                zbuffer->SetPixel(j, i, zi);
-
+            if (tipus==1){
+                SetPixelSafe(v4.x,v4.y,finalColor);
             }
-        }
-     
+            else if(tipus==2){
+                //tipus 2:
+                //3.3 Draw a mesh with occlusions (Z-Buffer) (3 points)
+                //trobem la zi de cada pixel utilitzant els pesos de cada vertex al nostre punt p, multiplicats per la coordinada z de cada vertex
+                float zi = (p0.z * bCoords.x) + (p1.z * bCoords.y) + (p2.z * bCoords.z);
+                
+                    if ( zi < zbuffer->GetPixel(j,i)){
+                        SetPixel(j, i, finalColor);
+                        zbuffer->SetPixel(j, i, zi);
+    
+                    }
+            } else if (tipus==3){
+                
+                //tipus 3:
+                Vector2 tex_f = (uv0 * bCoords.x + uv1 * bCoords.y + uv2 * bCoords.z);
+                const float& zi = (p0.z * bCoords.x) + (p1.z * bCoords.y) + (p2.z * bCoords.z);
+               
+                //agafar colo de la textura en el punt que estigui i fer setpixelsafe:
+                if ( zi < zbuffer->GetPixel(j,i)){
+                    Color color_t = tex->GetPixelSafe(tex_f.x,(tex->height-1)  -tex_f.y);
+                    SetPixelSafe(j, i, color_t);
+                    zbuffer->SetPixel(j, i, zi);
+
+                }
+            }
     }
 
   }
@@ -403,6 +386,50 @@ void Image::DrawTriangleInterpolated(const Vector3& p0, const Vector3& p1, const
 
 
 
+void Image::ScanLineDDA(int x0, int y0, int x1, int y1, std::vector<Cell>& table){
+   
+    float dx = x1 - x0;
+        float dy = y1 - y0;
+
+        float d = std::max(abs(dx), abs(dy));
+        Vector2 v = Vector2(dx / d, dy / d);
+        float x = x0, y = y0;
+
+        for (float i = 0; i <= d; i++) {
+            //Update the table only if the calculated y coordinates are within the range of the image
+            if (y >= 0 && y < table.size()) {
+                table[floor(y)].min_x = fmin(floor(x), table[floor(y)].min_x);
+                table[floor(y)].max_x = fmax(floor(x), table[floor(y)].max_x);
+            }
+            x += v.x;
+            y += v.y;
+        }
+}
+
+
+
+void Image::DrawTriangle(const Vector2& p0,const Vector2& p1, const Vector2& p2, const Color& borderColor, bool isFilled, const Color& fillColor){
+
+    if (isFilled) {
+            //Create table
+            std::vector<Cell> table(height);
+            //Update table with the min and max x values of the triangle
+            ScanLineDDA(p0.x, p0.y, p1.x, p1.y, table);
+            ScanLineDDA(p1.x, p1.y, p2.x, p2.y, table);
+            ScanLineDDA(p0.x, p0.y, p2.x, p2.y, table);
+            //Paint the triangle
+            for (int i = 0; i < table.size(); i++) {
+                //Paint each row of the triangle from minx to maxx (included)
+                for (int j = table[i].min_x; j <= table[i].max_x; j++) {
+                    SetPixelSafe(j, i, fillColor);
+                }
+            }
+        }
+
+        DrawLineDDA(p0.x, p0.y, p1.x, p1.y, borderColor);
+        DrawLineDDA(p0.x, p0.y, p2.x, p2.y, borderColor);
+        DrawLineDDA(p1.x, p1.y, p2.x, p2.y, borderColor);
+}
 
 
 
@@ -587,69 +614,6 @@ void Image::DrawCircle(int x, int y, int r, const Color & borderColor,int border
                 // EXERCICI 4 IMPLEMENT NOSTRE DE (DRAWTRIANGLE 2P)\\
 
 
-void Image::ScanLineDDA(int x0, int y0, int x1, int y1, std::vector<Cell>& table){
-   
-    if (y0 > y1) { //busquem tenir les cordenades de 0 com a les mínimes (fem canvis si es necessari)
-
-        std::swap(x0, x1);
-        std::swap(y0, y1);
-
-    }
-
-    int difx = x1 - x0;
-    int dify = y1 - y0;
-    float maxy = std::max(1,dify);//evitem divisions entre 0
-    float pen = difx / maxy; //pas de x per cada iteracio
-    float x2 = x0; //var aux per comoditat
-
-    for (int i = y0; i < y1; i++) {
-
-        if (i >= 0 && i < table.size()) { //i dins de rang de table (que no surti)
-
-            if (table[i].min_x > x2) {
-                table[i].min_x=x2;
-
-            }
-            if (table[i].max_x < x2) {
-                table[i].max_x = x2;
-
-            }
-            
-        }
-        x2 = x2 + pen;
-    }
-
-}
-
-
-
-void Image::DrawTriangle(const Vector2& p0,const Vector2& p1, const Vector2& p2, const Color& borderColor, bool isFilled, const Color& fillColor){
-
-    int puntomax = std::max({ p0.y,p1.y,p2.y }); //busquem el punt d'altura maxima (y max)
-    std::vector<Cell> table(puntomax); //creem taula amb aquell punt com a maxim per no passarsnos
-
-    if (isFilled == true) {
-
-            //actualitzem valors taula
-            ScanLineDDA(p0.x, p0.y, p1.x, p1.y, table);
-            ScanLineDDA(p1.x, p1.y, p2.x, p2.y, table);
-            ScanLineDDA(p2.x, p2.y, p0.x, p0.y, table);
-
-        int puntomin = static_cast<int>(std::min({ p0.y,p1.y,p2.y })); //trobem minim
-        for (int i = puntomin; i < table.size(); i++) {
-
-            if (table[i].min_x < table[i].max_x) {
-                for (int j = table[i].min_x + 1; j < table[i].max_x; j++) {
-                    SetPixelSafe(j, i, fillColor);
-                }
-            }
-        }
-    }
-    //dibuixem bordes triangle
-       DrawLineDDA(p0.x, p0.y, p1.x, p1.y, borderColor);
-       DrawLineDDA(p1.x, p1.y, p2.x, p2.y, borderColor);
-       DrawLineDDA(p2.x, p2.y, p0.x, p0.y, borderColor);
-}
     
 
 #ifndef IGNORE_LAMBDAS

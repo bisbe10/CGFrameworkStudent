@@ -56,10 +56,10 @@ Entity::Entity(Mesh* m){
 }
 
 
-void Entity::Render(Image* framebuffer, Camera* camera, const Color& c,const Color& fc,const Color& c3, rendertype t, FloatImage* zBuffer,int tipus){
+void Entity::Render(Image* framebuffer, Camera* camera, const Color& c,const Color& fc,const Color& c3,  FloatImage* zBuffer,int tipus){
     
     //Fill funció que trobem a la clase FloatImage
-    zBuffer->Fill(10000.0); //omplim el z-buffer.
+
     width_window = framebuffer->width-10;
     // boolea x assegurar-nos de que els punts estiguin dins del rang.
     bool negZ;
@@ -130,7 +130,7 @@ void Entity::Render(Image* framebuffer, Camera* camera, const Color& c,const Col
 
     }
         //            ////DIBUEIXEM NOMES ELS VERTEX DE LA MESH
-                    if(t==PO){
+                    if(this->t==PO){
                         if( negZ==false){
                             framebuffer->SetPixelSafe(V_3a[0].x, V_3a[0].y, Color::RED);
                             framebuffer->SetPixelSafe(V_3a[1].x, V_3a[1].y, Color::RED);
@@ -138,7 +138,7 @@ void Entity::Render(Image* framebuffer, Camera* camera, const Color& c,const Col
                         }
                     }
                     // DIBUEIXEM ELS BORDES (I CONSEGÜENTMENT ELS VERTEX) DE LA MESH
-                    else if (t==WR && negZ==false){
+                    else if (this->t==WR && negZ==false){
                         framebuffer->DrawLineDDA(V_3a[0].x, V_3a[0].y, V_3a[1].x,V_3a[1].y,c);
                         framebuffer->DrawLineDDA(V_3a[1].x, V_3a[1].y, V_3a[2].x,V_3a[2].y,c);
                         framebuffer->DrawLineDDA(V_3a[2].x, V_3a[2].y, V_3a[0].x,V_3a[0].y,c);
@@ -146,11 +146,11 @@ void Entity::Render(Image* framebuffer, Camera* camera, const Color& c,const Col
                     
                    // DIBUEIXEM ELS TRIANGLES PLENS DE LA MESH AMB UN COLOR C DE BORDE I UN FC DE FILL
                    
-                    else if(t==TR && negZ==false){
+                    else if(this->t==TR && negZ==false){
                         framebuffer->DrawTriangle(V2_3a[0], V2_3a[1], V2_3a[2], c,true ,c);
                     
                    // DIBUEIXEM ELS TRIANGLES PLENS DE LA MESH AMB ELS COLORS INTERPOLATS
-                    }else if((t==TI && negZ==false)||(t==TX && negZ==false)){
+                    }else if((this->t==TI && negZ==false)||(this->t==TX && negZ==false)){
                         
                         //selecionem els 3 V_uvs dels vertex que estem estudiant
                          Vector2 UVs1 = V_uvs[i];  Vector2 UVs2= V_uvs[i+1];  Vector2 UVs3 = V_uvs[i+2];

@@ -104,15 +104,8 @@ public:
     // EXERCICI 1 IMPLEMENT NOSTRE  DE (DRAWLINEDDA 1p)
     void DrawLineDDA(int x0, int y0, int x1, int y1, const Color& c);
 
-    // EXERCICI 2 IMPLEMENT NOSTRE DE ( DRAWRECT 1P)
-    void DrawRect(int x, int y, int w, int h, const Color& borderColor, int borderWidth, bool isFilled, const Color& fillColor);
 
-    // EXERCICI 3 IMPLEMENT NOSTRE DE (DRAWCIRCLE 2p)
-    void DrawCircle(int x, int y, int r, const Color & borderColor,int borderWidth, bool fill, const Color& fillColor);
-
-    // EXERCICI 4 IMPLEMENT NOSTRE DE (DRAWTRIANGLE 2P)
-
-        //estructura Cell
+    //estructura Cell
     struct Cell{
         int min_x=INT_MAX;
         int max_x=INT_MIN;

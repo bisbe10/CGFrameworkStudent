@@ -42,7 +42,7 @@ public:
     Entity(Entity& e);
     Entity(Mesh* m);
     
-    void Render(Image* framebuffer, Camera* camera, const Color& c,const Color& fc,const Color& c3, rendertype t,FloatImage* zBuffer,int tipus);
+    void Render(Image* framebuffer, Camera* camera, const Color& c,const Color& fc,const Color& c3,FloatImage* zBuffer,int tipus);
     void Update(float seconds_elapsed, type t);//afegim tipo t per determinar el tipus de moviment
 };
 

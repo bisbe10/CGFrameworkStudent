@@ -164,24 +164,24 @@ void Application::Render(void)
             
             entity1.t=TR;
             tipus=1;
-            entity1.Render(&framebuffer,cam1, Color::WHITE,Color::RED,Color::BLUE,entity1.t, &zbuffer,tipus);
+            entity1.Render(&framebuffer,cam1, Color::WHITE,Color::RED,Color::BLUE, &zbuffer,tipus);
 
         }else if(C==false&& T==false){
             if (c==1){
                 if(Z){
                     tipus=2;
                     entity1.t=TI;
-                    entity1.Render(&framebuffer,cam1, Color::GREEN,Color::RED,Color::BLUE,entity1.t, &zbuffer, tipus);
+                    entity1.Render(&framebuffer,cam1, Color::GREEN,Color::RED,Color::BLUE, &zbuffer, tipus);
                 } else{
                     
                     entity1.t=TI;
                     tipus=1;
-                    entity1.Render(&framebuffer,cam1, Color::GREEN,Color::RED,Color::BLUE,entity1.t, &zbuffer,tipus);
+                    entity1.Render(&framebuffer,cam1, Color::GREEN,Color::RED,Color::BLUE, &zbuffer,tipus);
                 }
             } else if (c==0){
                 entity1.t=TR;
                 tipus=1;
-                entity1.Render(&framebuffer,cam1, Color::WHITE,Color::RED,Color::BLUE,entity1.t, &zbuffer,tipus);
+                entity1.Render(&framebuffer,cam1, Color::WHITE,Color::RED,Color::BLUE, &zbuffer,tipus);
            
             } else { // c=-1 (inicialitzem el framebuffer en pantalla negra)
                 framebuffer.Fill(Color::BLACK);
@@ -191,7 +191,7 @@ void Application::Render(void)
         } else if(T==true&&C==false){
             entity1.t=TX;
             tipus=3;
-            entity1.Render(&framebuffer,cam1, Color::GREEN,Color::RED,Color::BLUE,entity1.t, &zbuffer, tipus);
+            entity1.Render(&framebuffer,cam1, Color::GREEN,Color::RED,Color::BLUE, &zbuffer, tipus);
         }
     
 
@@ -270,7 +270,6 @@ void Application::OnKeyPressed( SDL_KeyboardEvent event )
                 parell_t=true;
             }
             break;
-//
 
                 //FINAL DE OnKeyPressed( SDL_KeyboardEvent event )\\
             
@@ -302,11 +301,6 @@ void Application::OnMouseButtonUp( SDL_MouseButtonEvent event )
         
    }
 }
-        
-        
-
-
-
 
 //-------------------------------------------------------------------------------------------------------------
 
@@ -328,10 +322,7 @@ void Application::OnMouseMove(SDL_MouseButtonEvent event)
         cam1->orbit(mouse_delta.x*0.01,up);
 
         cam1->orbit(mouse_delta.y*0.01,Vector3(1,0,0));
-        
     }
-    
-   
 }
 
 void Application::OnWheel(SDL_MouseWheelEvent event)

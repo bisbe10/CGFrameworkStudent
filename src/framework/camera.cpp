@@ -68,14 +68,7 @@ void Camera::SetOrthographic(float left, float right, float top, float bottom, f
 
 	UpdateProjectionMatrix();
 }
-void Camera::orbit(float angle_in_rad, const Vector3& axis){
-    Matrix44 R;
-    R.SetRotation(angle_in_rad, axis);
-    Vector3 new_front = R * (eye-center);
-    this->eye = center + new_front;
-    
-    UpdateViewMatrix();
-}
+
 void Camera::SetPerspective(float fov, float aspect, float near_plane, float far_plane)
 {
 	type = PERSPECTIVE;

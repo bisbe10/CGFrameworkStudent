@@ -9,15 +9,14 @@
 #include "image.h"
 //important incluir la mesh
 #include "mesh.h"
-#include "entity.h"
+#include "shader.h"
+#include "entity1.h"
+
 
 class Application
 {
 public:
 
-    //PARTICLE SYSTEM
-//    ParticleSystem ps;
-	// Window
 
 	SDL_Window* window = nullptr;
 	int window_width;
@@ -62,65 +61,22 @@ public:
         return Vector2(float(w), float(h));
     }
 
-    // CPU Global framebuffer
-    Image framebuffer;
+    // CPU Global framebuffe
     
-    //                  ------------------PRACTICA 3---------------------------
-    
-    //zbuffer
-    FloatImage zbuffer;
-    //textura
-    Image* anna_t;
-    Image* cleo_t;
-    Image* lee_t;
-    //                  ------------------PRACTICA 2---------------------------
-    
-    // ---------------------DEFINICIONS DE VARIABLES I INSTANCIES PER LA PRACTICA 2--------------------------
-    
-    bool C= false;
-    bool Z = false;
-    bool T = false;
-    bool parell_c= true;
-    bool parell_z = true;
-    bool parell_t= true;
-    //variable que determina si C= false; T= false; perque hem apretat la tecla T (c==0) o C (c==1) 
-    int c=-1;
-    int tipus=1;
-    
-    //                                               // MESHES \\
-    
-    Mesh* anna;
-    Mesh* cleo;
-    Mesh* lee;
-    //                                               // MATRIX \\
-    //les matrius estan definides a framework.h
-    Matrix44 mtx1;
-    Matrix44 mtx2;
-    Matrix44 mtx3;
-    Matrix44 Scale;
-    //Exemples
-    
-    //                                              // ENTITIES \\
-    
-    Entity entity1;
-    Entity entity2;
-    Entity entity3;
-    //                                               // CAMERAS\\
+
+    //                  ------------------PRACTICA 4---------------------------
     
     Camera* cam1;
-    
-    float near = 0.0;
-    float far = 0.0;
-    float fov = 45.0;
-    
-    Vector3 eye;
-    Vector3 cen;
-    Vector3 up = Vector3(0.0, 1.0, 0.0) ;
-    bool avant= true;
-    
-    
-    
-    
+    Shader* shader=nullptr;
+    Mesh quad;
+    Mesh anna_m;
+    Entity1 anna_e;
+    Texture* fruites;
+    Texture* anna_t;
+    Image* anna_i;
+    float option;
+    float ex;
+    Matrix44 Scale;
     
     
 //FINAL DE LA DECLARACIÓ DE LA CLASE APPLICATION

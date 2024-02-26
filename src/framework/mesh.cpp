@@ -19,6 +19,7 @@ void Mesh::Clear()
 
 void Mesh::Render(int primitive)
 {
+
 	// Render the mesh using your rasterizer
 	assert(vertices.size() && "No vertices in this mesh");
 

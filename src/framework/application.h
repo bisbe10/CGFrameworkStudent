@@ -11,6 +11,7 @@
 #include "mesh.h"
 #include "shader.h"
 #include "entity1.h"
+#include "material.h"
 
 
 class Application
@@ -64,10 +65,9 @@ public:
     // CPU Global framebuffe
     
 
-    //                  ------------------PRACTICA 4---------------------------
+
     
     Camera* cam1;
-    Shader* shader=nullptr;
     Mesh quad;
     Mesh anna_m;
     Entity1 anna_e;
@@ -75,9 +75,29 @@ public:
     Texture* anna_t;
     Image* anna_i;
     float option;
+    float llum;
     float ex;
     Matrix44 Scale;
     
+    //                  ------------------PRACTICA 5---------------------------
+    Shader* p_shader=nullptr;
+    Shader* ps_shader=nullptr;
+    Shader* pn_shader=nullptr;
+    Shader* g_shader=nullptr;
+    sLight l1;
+    Texture* anna_tn;
+    sLight l2;
+    sLight l3;
+    Vector3 Ia;
+    Material* mg;
+    Material* mp;
+    Material* mp_s;
+    Material* mp_n;
+    Material* mp_t;
+    sUniformData sUnif;
+    bool b_texture=false;
+    bool n_texture=false; bool s_texture=false;
+
     
 //FINAL DE LA DECLARACIÓ DE LA CLASE APPLICATION
 };

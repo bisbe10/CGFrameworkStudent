@@ -14,6 +14,7 @@
 #include "utils.h"
 #include "image.h"
 
+
 //includes per poder fer servir l'sleep i que la funció esperi
 #include <iostream>
 #include <chrono>
@@ -46,6 +47,15 @@ Entity1::Entity1(Mesh* m, Image* t){
         this->texture = t;
         
 }
+Entity1::Entity1(Mesh* m, Image* t, Material* mt){
+        this->mesh = m;
+        this->m_matrix= Matrix44();
+        this->texture = t;
+        this->material=mt;
+        
+    
+        
+}
 
 Entity1::Entity1(Mesh* m){
         this->mesh = m;
@@ -56,19 +66,22 @@ Entity1::Entity1(Mesh* m){
 }
 
 
-void Entity1::Render(Camera* cam){
-  
-
-    glEnable(GL_DEPTH_TEST);
-
-    glDepthFunc(GL_LEQUAL);
+void Entity1::Render(sUniformData Ud){
+    //ENABLE
+    material->Enable(Ud);
+    material->shader->SetFloat("option", Ud.u_option);
+   //codi que ja teniem igual a la pràctica anterior.
+   glEnable(GL_DEPTH_TEST);
+   glEnable(GL_BLEND);
+   glDepthFunc(GL_LEQUAL);
    
-    this->mesh->Render();
+   this->mesh->Render();
     
-
-    glDisable(GL_DEPTH_TEST);
-
-
+   glDisable(GL_DEPTH_TEST);
+    
+    
+    //DISABLE
+    material->Disable();
 
 
 

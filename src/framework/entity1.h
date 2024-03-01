@@ -4,6 +4,7 @@
 #include "camera.h"
 #include "main/includes.h"
 #include "mesh.h"
+#include "material.h"
 
 
 // DEFINICIÓ DE LA CLASE ENTITY _____________________________________________________________________
@@ -29,10 +30,11 @@ public:
     
     
     
-    //TEXTURA
+
     Image *texture;
     Mesh *mesh;
     Matrix44 m_matrix;
+    Material* material;
     
     //DIF CONSTRUCTORS
     Entity1();
@@ -41,8 +43,9 @@ public:
     Entity1(Mesh* m,Matrix44 mm, Image* t);
     Entity1(Entity1& e);
     Entity1(Mesh* m);
+    Entity1(Mesh* m, Image* t, Material* mt);
     
-    void Render(Camera* cam);
+    void Render(sUniformData Ud);
     void Update(float seconds_elapsed, type t);//afegim tipo t per determinar el tipus de moviment
 };
 
